@@ -4,12 +4,12 @@ export class TitleView extends View {
     constructor() {
         super( 'title' );
     }
-    
-    show( host: ViewHost, param?: any ): Promise<ViewReference> {
-        host.clear();
+    init() {}
+    show( param?: any ): Promise<ViewReference> {
+        this.host.clear();
         console.log(
-            host.chalk.yellow(
-                host.figlet.textSync('Screenbot', { horizontalLayout: 'full' })
+                this.host.chalk.yellow(
+                this.host.figlet.textSync('Screenbot', { horizontalLayout: 'full' })
             )
         );
         return Promise.resolve( { id: 'main', param: {} } );

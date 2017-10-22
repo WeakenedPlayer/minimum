@@ -34,14 +34,23 @@ var prefs = new Preferences('com.weakenedplayer.screenshot-bot', {
 } );
 
 import { View, ViewHost, ViewReference } from './view';
-import { TitleView } from './views/title';
-import { MainView } from './views/main';
+import { 
+    TitleView, 
+    MainView, 
+    DirectorySettingView, 
+    ScreenshotDirectorySettingView,
+    TemporaryDirectorySettingView,
+    TokenSettingView,
+} from './views';
 
 let host = new ViewHost();
 host.register( new TitleView() );
 host.register( new MainView() );
+host.register( new DirectorySettingView() );
+host.register( new ScreenshotDirectorySettingView( prefs ) );
+host.register( new TemporaryDirectorySettingView( prefs ) );
+host.register( new TokenSettingView( prefs ) );
 host.open( {id: 'title'} );
-
 /*
 function confirmReuse(): Promise<boolean> {
     return prompt( {

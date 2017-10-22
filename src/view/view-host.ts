@@ -15,8 +15,14 @@ export class ViewHost {
     public readonly figlet = require('figlet');
     public readonly prompt = this.inquirer.createPromptModule();
     
+    get LastViewReference() { 
+        return this.lastViewRef;
+    }
+    
     register( view: View ) {
         this.views[ view.id ] = view;
+        view.setHost( this );
+        view.init();
     }
     
     unregister( view: View ) {
@@ -25,7 +31,7 @@ export class ViewHost {
     
     open( ref: ViewReference ): Promise<void> {
         if( ref && this.views[ ref.id ] ) {
-            return this.views[ ref.id ].show( this, ref.param ).then( ( nextRef ) => {
+            return this.views[ ref.id ].show( ref.param ).then( ( nextRef ) => {
                 this.lastViewRef = ref;
                 this.open( nextRef );
             } );            
