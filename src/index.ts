@@ -32,7 +32,20 @@ var prefs = new Preferences('com.weakenedplayer.screenshot-bot', {
         tmp: 'temporary directory'
     }
 } );
+import { MainView } from './main';
+let main = new MainView();
 
+main.show();
+
+
+/*
+import { View, ViewHost, MainView } from './host';
+
+let host = new ViewHost();
+host.register( new MainView() );
+host.start();
+
+host.goto( 'main');
 import { View, ViewHost, ViewReference } from './view';
 import { 
     TitleView, 
@@ -41,17 +54,19 @@ import {
     ScreenshotDirectorySettingView,
     TemporaryDirectorySettingView,
     TokenSettingView,
+    LoginView,
 } from './views';
 
 let host = new ViewHost();
 host.register( new TitleView() );
 host.register( new MainView() );
 host.register( new DirectorySettingView() );
-host.register( new ScreenshotDirectorySettingView( prefs ) );
-host.register( new TemporaryDirectorySettingView( prefs ) );
 host.register( new TokenSettingView( prefs ) );
+host.register( new LoginView( bot, prefs ) );
+host.register( new TemporaryDirectorySettingView( prefs ) );
+host.register( new ScreenshotDirectorySettingView( prefs ) );
 host.open( {id: 'title'} );
-/*
+
 function confirmReuse(): Promise<boolean> {
     return prompt( {
         type: 'confirm',
