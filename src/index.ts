@@ -10,8 +10,6 @@ import * as fs from 'fs';
  * フォルダ設定は2つ表示する
  * 
  * */
-import { ScreenshotBot } from '@weakenedplayer/screenshot-bot';
-let bot = new ScreenshotBot();
 // Title
 
 interface ClientPreference {
@@ -23,14 +21,18 @@ interface ClientPreference {
 
 //Init preference file with an unique identifier and an optional default data
 
-import { ViewHost, BotPreference } from './@modules';
-import { MainView, TokenSettingView } from './views';
+import { ViewHost, BotPreference, BotController } from './@modules';
+import { OnlineMainView, OfflineMainView, TokenSettingView } from './views';
 
+let pref = new BotPreference( 'com.discord-bot.weakenedplayer' );
+let controller = new BotController( pref );
 let host = new ViewHost();
-host.add( 'main', new MainView() );
-host.add( 'token-setting', new TokenSettingView( new BotPreference( 'com.discord-bot.weakenedplayer' ) ) );
+
+host.add( 'online-main', new OnlineMainView( controller ) );
+host.add( 'offline-main', new OfflineMainView( controller ) );
+host.add( 'token-setting', new TokenSettingView( pref ) );
 host.show$.subscribe();
-host.next( 'main' );
+host.next( 'offline-main' );
 
 /*
 import { View, ViewHost, MainView } from './host';

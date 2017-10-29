@@ -5,7 +5,6 @@ export class TokenSettingView extends View {
         super();
     }
     show( param?: any ): Promise<void> {
-        clear();
         return prompt( {
             type: 'input',
             name: 'token',
@@ -14,7 +13,8 @@ export class TokenSettingView extends View {
         } ).then( ( answer: any ) => {
             let token: string = answer.token;
             this.pref.token = token;
-            this.host.next( 'main' );
+            console.log( this.pref.token );
+            this.host.next( 'offline-main' );
         } );
     }
 }
