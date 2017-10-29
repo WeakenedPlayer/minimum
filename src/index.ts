@@ -20,23 +20,17 @@ interface ClientPreference {
     channelId: string;
 }
 
-var Preferences = require("preferences");
 
 //Init preference file with an unique identifier and an optional default data
-var prefs = new Preferences('com.weakenedplayer.screenshot-bot', {
-    client: {
-        token: 'MzM4MzU4Nzk4MDY0NDE4ODE4.DL0uXQ.pmu6W_FdguNS7GulaK_hpbPrPxE',
-    },
-    directory: {
-        src: 'screen-shot directory',
-        tmp: 'temporary directory'
-    }
-} );
-import { MainView } from './main';
-let main = new MainView();
 
-main.show();
+import { ViewHost, BotPreference } from './@modules';
+import { MainView, TokenSettingView } from './views';
 
+let host = new ViewHost();
+host.add( 'main', new MainView() );
+host.add( 'token-setting', new TokenSettingView( new BotPreference( 'com.discord-bot.weakenedplayer' ) ) );
+host.show$.subscribe();
+host.next( 'main' );
 
 /*
 import { View, ViewHost, MainView } from './host';
