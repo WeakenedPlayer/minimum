@@ -1,11 +1,21 @@
-import { prompt, BotPreference, InputView } from '../@modules';
+import { prompt, clear, BotPreference, InputView, View } from '../@modules';
 
 export class TokenInputView extends InputView {
     constructor( private pref: BotPreference ) {
         super();
     }
+    protected preShow(): void {
+        clear();
+    }
+    
     protected message(): string {
-        let message = 'Input token: ';
+        let token = this.pref.token;
+        let message: string;
+        if( token ) {
+            message = 'Input token\n  Current value: ' + token + '\n  New value    :'; 
+        } else {
+            message = 'Input token:'; 
+        }
         return message;
     }
     

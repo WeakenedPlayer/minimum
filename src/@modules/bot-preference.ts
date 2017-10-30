@@ -20,7 +20,6 @@ export class BotPreference {
     } 
     set token( token: string ){ this.pref.client.token = token; }
     get token(): string {
-        console.log( this.pref );
         return this.pref.client.token;
     }
 

@@ -8,6 +8,7 @@ export class StartView extends View {
         this.commands.add( 'Temporary directory...', new SyncCommand( () => { this.host.next( 'temporary-input' ); } ) );
         this.commands.add( 'Discord App Token...', new SyncCommand( () => { this.host.next( 'token-input' ); } ) );
         this.commands.add( 'Login', new SyncCommand( () => { this.host.next( 'token-input' ); } ) );
+        // error?
         this.commands.add( 'Quit', new SyncCommand( () => { this.host.close(); } ) );
     }
     show( param?: any ): Promise<void> {

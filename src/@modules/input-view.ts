@@ -12,7 +12,7 @@ export abstract class InputView extends View {
         return prompt( {
             type: 'input',
             name: 'input',
-            message: this.message,
+            message: this.message(),
         } ).then( ( answer: any ) => {
             let input: string = answer.input;
             return this.process( input );
