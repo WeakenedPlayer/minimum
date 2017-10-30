@@ -1,4 +1,5 @@
 import { Subject, Observable } from 'rxjs';
+import { inquirer } from './cli';
 
 export abstract class View {
     protected host: ViewHost = null;
@@ -17,13 +18,18 @@ export class ViewHost {
     private views: { [id:string]: View } = {};
     private viewSubject: Subject<ViewReference> = new Subject();
     private viewObservable: Observable<void>;
+    private _bottomBar: any;
     public get show$(): Observable<void> {
         return this.viewObservable;
     }
     constructor() {
-        this.viewObservable = this.viewSubject.flatMap( ref => {
-            if( ref.id && this.views[ ref.id ] ) {
+        this._bottomBar = new inquirer.ui.BottomBar();
+        this.viewObservable = this.viewSubject
+        .flatMap( ref => {
+            if( ref && ref.id && this.views[ ref.id ] ) {
                 return Observable.fromPromise( this.views[ ref.id ].show( ref.param ) );
+            } else {
+                this.close();
             }
         } );
     }
@@ -39,5 +45,13 @@ export class ViewHost {
         if( id ) {
             this.viewSubject.next( new ViewReference( id, param ) );
         }
+    }
+    
+    close(): void {
+        this.viewSubject.complete();
+    }
+    
+    set bottomBar( text: string ) {
+        this._bottomBar.updateBottomBar( text );
     }
 }

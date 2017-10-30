@@ -1,7 +1,23 @@
-export class Command {
-    constructor( private fnc: ( param: any ) => Promise<void> ) {}
+export abstract class Command {
+    public abstract execute( param: any ): Promise<void>;
+}
+
+export class AsyncCommand extends Command {
+    constructor( private fnc: ( param: any ) => Promise<void> ) {
+        super();
+    }
     public execute( param: any ): Promise<void> {
         return this.fnc( param );
+    }
+}
+
+export class SyncCommand extends Command {
+    constructor( private fnc: ( param: any ) => void ) {
+        super();
+    }
+    public execute( param: any ): Promise<void> {
+        this.fnc( param );
+        return Promise.resolve();
     }
 }
 

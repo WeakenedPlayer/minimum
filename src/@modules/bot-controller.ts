@@ -43,6 +43,7 @@ export class BotController {
     }
     
     constructor( private pref: BotPreference ) {
+        this.initObservables();
     }
     
     destroy() {

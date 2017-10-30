@@ -1,28 +1,8 @@
-import * as path from 'path';
-import * as url from 'url';
-import * as fs from 'fs';
-
-
-/* 仕様
- * 画面を開くとタイトル表示とともに設定を表示
- * 最初はクライアント設定とフォルダ設定の2つ
- * 
- * フォルダ設定は2つ表示する
- * 
- * */
-// Title
-
-interface ClientPreference {
-    token: string;
-    guildId: string;
-    channelId: string;
-}
-
 
 //Init preference file with an unique identifier and an optional default data
-
+/*
 import { ViewHost, BotPreference, BotController } from './@modules';
-import { OnlineMainView, OfflineMainView, TokenSettingView } from './views';
+import { OnlineMainView, OfflineMainView, TokenSettingView, GuildSettingView } from './views';
 
 let pref = new BotPreference( 'com.discord-bot.weakenedplayer' );
 let controller = new BotController( pref );
@@ -31,9 +11,27 @@ let host = new ViewHost();
 host.add( 'online-main', new OnlineMainView( controller ) );
 host.add( 'offline-main', new OfflineMainView( controller ) );
 host.add( 'token-setting', new TokenSettingView( pref ) );
+host.add( 'guild-setting', new GuildSettingView( pref, controller ) );
 host.show$.subscribe();
 host.next( 'offline-main' );
+*/
+import { Observable } from 'rxjs';
+import { ViewHost, BotController, BotPreference } from './@modules';
 
+import { SourceInputView, TemporaryInputView, TokenInputView, StartView } from './views';
+
+let host = new ViewHost();
+let pref = new BotPreference( 'com.discord-bot.weakenedplayer' );
+let controller = new BotController( pref );
+
+host.add( 'start', new StartView() );
+host.add( 'source-input', new SourceInputView( pref ) );
+host.add( 'temporary-input', new TemporaryInputView( pref ) );
+host.add( 'token-input', new TokenInputView( pref ) );
+
+let i = 0;
+let s = host.show$.subscribe( ()=>{}, (err)=>{console.log(err), ()=>{console.log('OK')}});
+host.next( 'start' );
 /*
 import { View, ViewHost, MainView } from './host';
 
