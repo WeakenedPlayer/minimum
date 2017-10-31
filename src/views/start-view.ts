@@ -7,20 +7,25 @@ export class StartView extends View {
         this.commands.add( 'Source directory...', new SyncCommand( () => { this.host.next( 'source-input' ); } ) );
         this.commands.add( 'Temporary directory...', new SyncCommand( () => { this.host.next( 'temporary-input' ); } ) );
         this.commands.add( 'Discord App Token...', new SyncCommand( () => { this.host.next( 'token-input' ); } ) );
+        this.commands.add( 'Logout', new AsyncCommand( () => {
+            return this.controller.logout()
+            .then( () => {
+                this.host.next( 'start' );
+            } );
+        } ) );
         this.commands.add( 'Login', new AsyncCommand( () => {
-            clear();
             let spinner = new clui.Spinner( 'Logging in...', ['◜','◠','◝','◞','◡','◟'] );
             spinner.start();
-            return this.controller.login().then( () => {
+            return this.controller.login()
+            .then( () => {
                 spinner.stop();
-            } ).then( ()=>{
-                this.controller.logout();
                 this.host.next( 'start' );
-            });
+            } );
         } ) );
         // error?
         this.commands.add( 'Quit', new SyncCommand( () => {
-            this.host.close(); 
+            this.host.close();
+            process.exit();
         } ) );
     }
     show( param?: any ): Promise<void> {

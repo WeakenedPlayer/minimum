@@ -7,7 +7,6 @@ import { BotPreference } from './bot-preference';
 export class BotController {
     private bot: ScreenshotBot = new ScreenshotBot();
 
-    private subscription: Subscription = new Subscription();
     private mergedObservables: Observable<any>;
 
     private appObservable: Observable<OAuth2App>;
@@ -19,7 +18,7 @@ export class BotController {
     get guild$() { return this.guildObservable; }
     get state$() { return this.bot.state$; } 
 
-    private initObservables() {
+    constructor( private pref: BotPreference ) {
         this.appObservable = this.bot.app$.map( app => {
             return new OAuth2App( app.id, app.name, app.description, app.iconURL, app.botPublic );
         } );
@@ -42,16 +41,7 @@ export class BotController {
         } );
     }
     
-    constructor( private pref: BotPreference ) {
-        this.initObservables();
-    }
-    
-    destroy() {
-        this.subscription.unsubscribe();
-    }
-    
     login(): Promise<string> {
-        console.log( this.pref.token );
         return this.bot.login( this.pref.token );
     }
     

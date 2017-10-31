@@ -3,7 +3,7 @@ var Preferences = require("preferences");
 
 const initValue = {
     client: {
-        token: 'MzM4MzU4Nzk4MDY0NDE4ODE4.DNjJ9g.Wm0aDhGmtL3w3-W7EmoQ47nXwEY',
+        token: '',
         guild: '',
         channel: '',
     },

@@ -29,12 +29,34 @@ host.add( 'source-input', new SourceInputView( pref ) );
 host.add( 'temporary-input', new TemporaryInputView( pref ) );
 host.add( 'token-input', new TokenInputView( pref ) );
 
-let i = 0;
-let s = host.show$.subscribe( ()=>{}, (err)=>{console.log(err), ()=>{
-    s.unsubscribe();
-}});
+host.show$.subscribe();
 host.next( 'start' );
+
 /*
+controller.login().then( ()=>{
+    controller.logout();
+    setTimeout(() => {
+    }, 3000);
+} );
+
+
+
+import { Subject } from 'rxjs';
+let test = new Subject<number>();
+let end$ = new Subject<boolean>();
+setInterval( ()=>{ 
+    test.next( i );
+    i++;
+    if( i > 5) {
+        end$.next( false );
+    }
+    if( i > 6 ) {
+        end$.next( true );
+    }
+}, 1000 );
+
+test.takeUntil( end$ ).subscribe( ( aaa ) => { console.log( aaa ) }, (err)=>console.log(err), ()=>console.log('end') );
+
 import { View, ViewHost, MainView } from './host';
 
 let host = new ViewHost();

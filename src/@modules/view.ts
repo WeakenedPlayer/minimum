@@ -13,25 +13,23 @@ class ViewReference {
     constructor( public readonly id, public readonly param?: any ) {}
 }
 
-/* 表示が重ならないようにする */
+/* inquirer.ui.bottomBar は消さないと終了できないので要注意 */
 export class ViewHost {
     private views: { [id:string]: View } = {};
     private end$: Subject<boolean> = new Subject();
     private viewSubject: Subject<ViewReference> = new Subject();
     private viewObservable: Observable<void>;
-    private _bottomBar: any;
     public get show$(): Observable<void> {
         return this.viewObservable;
     }
     constructor() {
-        this._bottomBar = new inquirer.ui.BottomBar();
         this.viewObservable = this.viewSubject
-        .takeUntil( this.end$ )
+        .filter( ( ref ) => { return ( ref && ref.id && ( this.views[ ref.id ] !== undefined )); } )
         .flatMap( ref => {
-            if( ref && ref.id && this.views[ ref.id ] ) {
-                return Observable.fromPromise( this.views[ ref.id ].show( ref.param ) );
-            }
-        } );
+            console.log( ref );
+            return Observable.fromPromise( this.views[ ref.id ].show( ref.param ) );
+        } )
+        .takeUntil( this.end$ );
     }
     
     add( id: string, view: View ): void {
@@ -49,9 +47,5 @@ export class ViewHost {
     
     close(): void {
         this.end$.next( true );
-    }
-    
-    set bottomBar( text: string ) {
-        this._bottomBar.updateBottomBar( text );
     }
 }
