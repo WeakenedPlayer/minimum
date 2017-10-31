@@ -24,13 +24,15 @@ let host = new ViewHost();
 let pref = new BotPreference( 'com.discord-bot.weakenedplayer' );
 let controller = new BotController( pref );
 
-host.add( 'start', new StartView() );
+host.add( 'start', new StartView( controller ) );
 host.add( 'source-input', new SourceInputView( pref ) );
 host.add( 'temporary-input', new TemporaryInputView( pref ) );
 host.add( 'token-input', new TokenInputView( pref ) );
 
 let i = 0;
-let s = host.show$.subscribe( ()=>{}, (err)=>{console.log(err), ()=>{console.log('OK')}});
+let s = host.show$.subscribe( ()=>{}, (err)=>{console.log(err), ()=>{
+    s.unsubscribe();
+}});
 host.next( 'start' );
 /*
 import { View, ViewHost, MainView } from './host';

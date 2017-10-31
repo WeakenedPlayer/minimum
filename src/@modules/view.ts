@@ -16,6 +16,7 @@ class ViewReference {
 /* 表示が重ならないようにする */
 export class ViewHost {
     private views: { [id:string]: View } = {};
+    private end$: Subject<boolean> = new Subject();
     private viewSubject: Subject<ViewReference> = new Subject();
     private viewObservable: Observable<void>;
     private _bottomBar: any;
@@ -25,11 +26,10 @@ export class ViewHost {
     constructor() {
         this._bottomBar = new inquirer.ui.BottomBar();
         this.viewObservable = this.viewSubject
+        .takeUntil( this.end$ )
         .flatMap( ref => {
             if( ref && ref.id && this.views[ ref.id ] ) {
                 return Observable.fromPromise( this.views[ ref.id ].show( ref.param ) );
-            } else {
-                this.close();
             }
         } );
     }
@@ -48,7 +48,7 @@ export class ViewHost {
     }
     
     close(): void {
-        this.viewSubject.complete();
+        this.end$.next( true );
     }
     
     set bottomBar( text: string ) {
