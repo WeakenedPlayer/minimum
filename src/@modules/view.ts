@@ -26,7 +26,6 @@ export class ViewHost {
         this.viewObservable = this.viewSubject
         .filter( ( ref ) => { return ( ref && ref.id && ( this.views[ ref.id ] !== undefined )); } )
         .flatMap( ref => {
-            console.log( ref );
             return Observable.fromPromise( this.views[ ref.id ].show( ref.param ) );
         } )
         .takeUntil( this.end$ );
