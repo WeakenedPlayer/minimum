@@ -24,16 +24,24 @@ let host = new ViewHost();
 let pref = new BotPreference( 'com.discord-bot.weakenedplayer' );
 let controller = new BotController( pref );
 
-host.add( 'start', new StartView( controller ) );
-host.add( 'online', new OnlineView( controller ) );
-host.add( 'source-input', new SourceInputView( pref ) );
-host.add( 'temporary-input', new TemporaryInputView( pref ) );
-host.add( 'token-input', new TokenInputView( pref ) );
 
+import { NodeRx } from 'node-rx';
+import { Store } from './store';
+import { NavigationActions } from './@store/navigation';
+let rx = new Store();
+
+rx.host.add( 'start', new StartView( controller ) );
+rx.host.add( 'online', new OnlineView( controller ) );
+rx.host.add( 'source-input', new SourceInputView( pref ) );
+rx.host.add( 'temporary-input', new TemporaryInputView( pref ) );
+rx.host.add( 'token-input', new TokenInputView( pref ) );
+
+rx.store.dispatch( NavigationActions.moveTo( 'start' ) );
+
+/*
 host.show$.subscribe();
 host.next( 'start' );
 
-/*
 controller.login().then( ()=>{
     controller.logout();
     setTimeout(() => {
