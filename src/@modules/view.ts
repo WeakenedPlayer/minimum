@@ -6,45 +6,33 @@ export abstract class View {
     public init( host: ViewHost ): void {
         this.host = host;
     }
-    public abstract show( param?: any ): Promise<void>;
+    public abstract show( param?: any );
 }
 
 class ViewReference {
     constructor( public readonly id, public readonly param?: any ) {}
 }
 
-/* inquirer.ui.bottomBar は消さないと終了できないので要注意 */
 export class ViewHost {
     private views: { [id:string]: View } = {};
-    private end$: Subject<boolean> = new Subject();
-    private viewSubject: Subject<ViewReference> = new Subject();
-    private viewObservable: Observable<void>;
-    public get show$(): Observable<void> {
-        return this.viewObservable;
-    }
-    constructor() {
-        this.viewObservable = this.viewSubject
-        .filter( ( ref ) => { return ( ref && ref.id && ( this.views[ ref.id ] !== undefined )); } )
-        .flatMap( ref => {
-            return Observable.fromPromise( this.views[ ref.id ].show( ref.param ) );
-        } )
-        .takeUntil( this.end$ );
-    }
-    
-    add( id: string, view: View ): void {
-        if( id ) {
-            this.views[ id ] = view;
-            view.init( this );
-        }
-    }
+    constructor() {}
 
     next( id: string, param?: any ): void {
-        if( id ) {
-            this.viewSubject.next( new ViewReference( id, param ) );
+        let view = this.views[ id ];
+        console.log( id );
+        console.log( view );
+        if( view ) {
+            view.show( param );            
         }
     }
     
     close(): void {
-        this.end$.next( true );
+        // inquirer.ui.close();
+    }
+    
+    add( name: string, view: View ): void {
+        if( name ) {
+            this.views[ name ] = view;            
+        }
     }
 }

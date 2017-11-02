@@ -13,8 +13,9 @@ export const navigationInitialState: NavigationState = {
 
 export function navigationReducer( state: NavigationState = navigationInitialState, action: any ): NavigationState {
     let newState = state;
-    if( action.type ) {
-        newState = nextState( state, { id: action.type, param: action.payload } );
+    if( action.type === NavigationActions.MOVE_TO ) {
+        console.log( action.payload );
+        newState = nextState( state, action.payload );
     }
     return newState;
 }

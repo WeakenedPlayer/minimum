@@ -16,8 +16,6 @@ export class NavigationEffects {
     .ofType( NavigationActions.MOVE_TO )
     .withLatestFrom( this.store$ )
     .map( ( [ action, store ] ) => {
-        console.log( '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>' );
-        console.log( action );
-        console.log( '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<' );
+        this.host.next( store.navigation.id, store.navigation.param );
     } );
 }

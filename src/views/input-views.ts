@@ -19,12 +19,11 @@ export class TokenInputView extends InputView {
         return message;
     }
     
-    protected process( input: string ): Promise<void> {
+    protected process( input: string ) {
         if( input ) {
             this.pref.token = input;            
         }
         this.host.next( 'start' );
-        return Promise.resolve();
     }
 }
 
@@ -35,12 +34,11 @@ export class SourceInputView extends InputView {
     protected message(): string {
         return 'Input Source Directory: ';
     }
-    protected process( input: string ): Promise<void> {
+    protected process( input: string ) {
         if( input ) {
             this.pref.source = input;            
         }
         this.host.next( 'start' );
-        return Promise.resolve();
     }
 }
 
@@ -51,12 +49,11 @@ export class TemporaryInputView extends InputView {
     protected message(): string {
         return 'Input Temporary Directory: ';
     }
-    protected process( input: string ): Promise<void> {
+    protected process( input: string ){
         if( input ) {
             this.pref.temporary = input;            
         }
         this.host.next( 'start' );
-        return Promise.resolve();
     }
 }
 

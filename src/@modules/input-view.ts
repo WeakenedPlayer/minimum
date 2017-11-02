@@ -6,10 +6,10 @@ export abstract class InputView extends View {
     }
     protected preShow(): void {}
     protected abstract message(): string;
-    protected abstract process( input: string ): Promise<void>;
-    show( param?: any ): Promise<void> {
+    protected abstract process( input: string );
+    show( param?: any ) {
         this.preShow();
-        return prompt( {
+        prompt( {
             type: 'input',
             name: 'input',
             message: this.message(),

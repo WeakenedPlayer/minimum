@@ -1,13 +1,38 @@
 import { prompt, clear, chalk, clui, SyncCommand, AsyncCommand, CommandMap, View, BotController } from '../@modules';
 
-export class StartView extends View {
-    private commands = new CommandMap();
-    constructor( private controller: BotController ) {
-        super();
-        this.commands.add( 'Source directory...', new SyncCommand( () => { this.host.next( 'source-input' ); } ) );
-        this.commands.add( 'Temporary directory...', new SyncCommand( () => { this.host.next( 'temporary-input' ); } ) );
-        this.commands.add( 'Discord App Token...', new SyncCommand( () => { this.host.next( 'token-input' ); } ) );
-        this.commands.add( 'Login', new AsyncCommand( () => {
+
+export class Menu {
+    private names: string[] = [];
+    private commandMap: { [ name: string ]: ( param?: any ) => void } = {};
+    
+    constructor(){}
+    
+    add( name: string, command: ( param?: any ) => void ) {
+        if( name && !this.commandMap[ name ] ) {
+            this.names.push( name );
+        }
+        this.commandMap[ name ] = command;
+    }
+    
+    clear() {
+        this.names = [];
+        this.commandMap = {};
+    }
+
+    get list(): string[] {
+        return this.names;
+    }
+    
+    execute( name: string, param?: any ): void {
+        let command = this.commandMap[ name ];
+        if( command ) {
+            command( param );
+        }
+    }
+}
+
+
+/*        this.commands.add( 'Login', new AsyncCommand( () => {
             let spinner = new clui.Spinner( 'Logging in...', ['◜','◠','◝','◞','◡','◟'] );
             clear();
             spinner.start();
@@ -25,19 +50,27 @@ export class StartView extends View {
             this.host.close();
             process.exit();
         } ) );
+    }*/
+export class StartView extends View {
+    private commands = new Menu();
+    constructor( private controller: BotController ) {
+        super();
+        this.commands.add( 'Source directory...', ( () => { this.host.next( 'source-input' ); } ) );
+        this.commands.add( 'Temporary directory...',  ( () => { this.host.next( 'temporary-input' ); } ) );
+        this.commands.add( 'Discord App Token...',  ( () => { this.host.next( 'token-input' ); } ) );
     }
-    show( param?: any ): Promise<void> {
+    show( param?: any ): void {
         clear();
         if( param ) {
             console.log( param );
         }
-        return prompt( {
+        prompt( {
             type: 'list',
             name: 'choice',
             message: 'Select Guild',
             choices: this.commands.list
         } ).then( ( answer: any ) => {
-            return this.commands.execute( answer.choice );
+            this.commands.execute( answer.choice );
         } );
     }
 }
