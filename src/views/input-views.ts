@@ -4,6 +4,7 @@ export class TokenInputView extends InputView {
     constructor( private pref: BotPreference ) {
         super();
     }
+    
     protected preShow(): void {
         clear();
     }
@@ -19,7 +20,7 @@ export class TokenInputView extends InputView {
         return message;
     }
     
-    protected process( input: string ) {
+    protected process( input: string ): void  {
         if( input ) {
             this.pref.token = input;            
         }
@@ -31,10 +32,13 @@ export class SourceInputView extends InputView {
     constructor( private pref: BotPreference ) {
         super();
     }
+    protected preShow(): void {
+        clear();
+    }
     protected message(): string {
         return 'Input Source Directory: ';
     }
-    protected process( input: string ) {
+    protected process( input: string ): void  {
         if( input ) {
             this.pref.source = input;            
         }
@@ -46,10 +50,13 @@ export class TemporaryInputView extends InputView {
     constructor( private pref: BotPreference ) {
         super();
     }
+    protected preShow(): void {
+        clear();
+    }
     protected message(): string {
         return 'Input Temporary Directory: ';
     }
-    protected process( input: string ){
+    protected process( input: string ): void {
         if( input ) {
             this.pref.temporary = input;            
         }

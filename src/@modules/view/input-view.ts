@@ -1,4 +1,5 @@
-import { prompt, inquirer, View } from '../@modules';
+import { prompt, inquirer } from './cli';
+import { View } from './view';
 
 export abstract class InputView extends View {
     constructor() {

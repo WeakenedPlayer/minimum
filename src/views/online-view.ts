@@ -1,4 +1,4 @@
-import { prompt, inquirer, clear, chalk, clui, SyncCommand, AsyncCommand, CommandMap, View, BotController } from '../@modules';
+import { prompt, inquirer, clear, chalk, clui, View, BotController } from '../@modules';
 import { Subscription, Subject, Observable } from 'rxjs';
 /*
  * 
@@ -8,7 +8,6 @@ import { Subscription, Subject, Observable } from 'rxjs';
             this.host.next( 'start', 'Disconnected from Discord.' );
  * */
 export class OnlineView extends View {
-    private commands = new CommandMap();
     
     constructor( private controller: BotController ) {
         super();
@@ -21,9 +20,8 @@ export class OnlineView extends View {
         } );
     }
 
-    show( param?: any ): Promise<void> {
+    show( param?: any ) {
         clear();
-        return Promise.resolve();
     }
 }
 

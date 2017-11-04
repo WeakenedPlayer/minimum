@@ -1,16 +1,13 @@
-import { Subject, Observable } from 'rxjs';
 import { inquirer } from './cli';
 
 export abstract class View {
     protected host: ViewHost = null;
+    constructor() {
+    }
     public init( host: ViewHost ): void {
         this.host = host;
     }
-    public abstract show( param?: any );
-}
-
-class ViewReference {
-    constructor( public readonly id, public readonly param?: any ) {}
+    public abstract show( param?: any ): void;
 }
 
 export class ViewHost {
@@ -19,8 +16,6 @@ export class ViewHost {
 
     next( id: string, param?: any ): void {
         let view = this.views[ id ];
-        console.log( id );
-        console.log( view );
         if( view ) {
             view.show( param );            
         }
@@ -31,8 +26,9 @@ export class ViewHost {
     }
     
     add( name: string, view: View ): void {
-        if( name ) {
-            this.views[ name ] = view;            
+        if( name && view ) {
+            view.init( this );
+            this.views[ name ] = view;
         }
     }
 }
