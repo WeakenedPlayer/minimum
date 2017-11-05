@@ -1,5 +1,5 @@
 import { inquirer } from './cli';
-import { Subject } from 'rxjs';
+import { Subject, Observable, Subscription } from 'rxjs';
 
 export abstract class View {
     protected host: ViewHost = null;
@@ -25,28 +25,46 @@ export class ViewHost {
     private views: { [id:string]: View } = {};
     private cancelSubject: Subject<string> = new Subject();
     private refSubject: Subject<ViewRef> = new Subject();
-    private lastView: View = null;
-    constructor() {}
+    private show$: Observable<void>;
+    private subscription: Subscription = new Subscription();
+    
+    constructor() {
+        this.show$ = this.refSubject
+        .flatMap( ref => {
+            let view = this.views[ ref.id ];
+            if( view ) {
+                //console.log( 'views/opened: ' + ref.id );
+                return Observable.fromPromise(
+                    view.show( ref.param )
+                    .then( ( answer: any ) => {
+                        //console.log( 'views/closed' );
+                        view.onClose();
+                        view.processAnswer( answer );
+                    }, ( err ) => {
+                        view.onClose();
+                    } )
+                );
+            }
+        } );
+    }
+    
+    start() {
+        this.subscription.add( this.show$.subscribe() );
+    }
+    
+    stop() {
+        if( !this.subscription.closed ) {
+            this.subscription.unsubscribe();            
+            this.subscription = new Subscription();
+        }
+    }
 
     cancel() {
         this.cancelSubject.error( false );
     }
     
     next( id: string, param?: any ): void {
-        let view = this.views[ id ];
-        
-        if( view ) {
-            view.onOpen();
-            Promise.race( [ view.show( param ), this.cancelSubject.take(1).toPromise() ] )
-            .then( ( answer: any ) => {
-                view.processAnswer( answer );
-                this.lastView = view;
-                view.onClose();
-            }, ( err ) => {
-                this.lastView = view;
-                view.onClose();
-            } );
-        }
+        this.refSubject.next( { id: id, param: param } );
     }
     
     add( name: string, view: View ): void {
