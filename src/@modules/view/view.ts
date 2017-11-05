@@ -16,9 +16,15 @@ export abstract class View {
     public abstract processAnswer( answer?: any): void;
 }
 
+interface ViewRef {
+    id: string;
+    param?: any;
+}
+
 export class ViewHost {
     private views: { [id:string]: View } = {};
     private cancelSubject: Subject<string> = new Subject();
+    private refSubject: Subject<ViewRef> = new Subject();
     private lastView: View = null;
     constructor() {}
 
@@ -31,15 +37,15 @@ export class ViewHost {
         
         if( view ) {
             view.onOpen();
-            Promise.race( [ this.cancelSubject.take(1).toPromise(), view.show( param ) ] )
+            Promise.race( [ view.show( param ), this.cancelSubject.take(1).toPromise() ] )
             .then( ( answer: any ) => {
                 view.processAnswer( answer );
+                this.lastView = view;
                 view.onClose();
             }, ( err ) => {
-                // キャンセル
+                this.lastView = view;
                 view.onClose();
             } );
-            this.lastView = view;
         }
     }
     

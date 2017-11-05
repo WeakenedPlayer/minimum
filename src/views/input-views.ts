@@ -17,7 +17,7 @@ export class TokenInputView extends InputView {
     }
     
     processAnswer( input: string ): void  {
-        console.log( input );
+        // console.log( input );
         if( input ) {
             this.pref.token = input;            
         }
@@ -26,11 +26,11 @@ export class TokenInputView extends InputView {
 
     onInit(){}
     onClose(){
-        console.log( 'TokenInputView/close' );
+        // console.log( 'TokenInputView/close' );
     }
     onOpen(){
-        // clear();
-        console.log( 'TokenInputView/open' );
+        clear();
+        // console.log( 'TokenInputView/open' );
     }
 }
 
@@ -39,7 +39,7 @@ export class SourceInputView extends InputView {
         super();
     }
     protected message(): string {
-        return 'Input Source Directory: ';
+        return 'Input Source Directory: \n';
     }
     processAnswer( input: string ): void  {
         if( input ) {
@@ -49,11 +49,11 @@ export class SourceInputView extends InputView {
     }
     onInit(){}
     onClose(){
-        console.log( 'SourceInputView/close' );
+        // console.log( 'TemporaryInputView/close' );
     }
     onOpen(){
-        // clear();
-        console.log( 'SourceInputView/open' );
+        clear();
+        // console.log( 'TemporaryInputView/open' );
     }
 }
 
@@ -72,11 +72,11 @@ export class TemporaryInputView extends InputView {
     }
     onInit(){}
     onClose(){
-        console.log( 'TemporaryInputView/close' );
+        // console.log( 'TemporaryInputView/close' );
     }
     onOpen(){
-        // clear();
-        console.log( 'TemporaryInputView/open' );
+        clear();
+        // console.log( 'TemporaryInputView/open' );
     }
 }
 

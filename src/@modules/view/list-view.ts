@@ -34,12 +34,12 @@ export abstract class ListView extends View {
     }
     
     processAnswer( answer: string ): void {
-        console.log( answer );
+        // console.log( answer );
         let action = this.actions[ answer ];
         if( action ) {
-            console.log( 'ListView/action' );
+            //console.log( 'ListView/action' );
             action();
         }
-        console.log( 'ListView/processAnswer' );
+        //console.log( 'ListView/processAnswer' );
     }
 }

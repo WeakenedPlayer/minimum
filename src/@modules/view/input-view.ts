@@ -7,10 +7,11 @@ export abstract class InputView extends View {
     }
     protected abstract message(): string;
     show( param?: any ): Promise<any> {
+        let message = this.message();
         return prompt( {
             type: 'input',
             name: 'input',
-            message: this.message(),
+            message: message,
         } ).then( ( answer ) => {
             return answer.input;
         } );

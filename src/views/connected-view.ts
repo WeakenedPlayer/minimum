@@ -66,7 +66,7 @@ export class ConnectedView extends ListView {
     }
 
     onOpen() {
-        clear();
+        //clear();
         this.subscription.add( this.disconnectionObservable.subscribe() );
         this.subscription.add( this.spinnerObservable.subscribe() );
     }
