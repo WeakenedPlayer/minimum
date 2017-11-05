@@ -5,11 +5,11 @@ export abstract class InputView extends View {
     constructor() {
         super();
     }
-    protected preShow(): void {}
+    protected abstract onPreShow(): void;
     protected abstract message(): string;
     protected abstract process( input: string );
     show( param?: any ) {
-        this.preShow();
+        this.onPreShow();
         prompt( {
             type: 'input',
             name: 'input',

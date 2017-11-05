@@ -26,6 +26,10 @@ export class TokenInputView extends InputView {
         }
         this.host.next( 'start' );
     }
+
+    onInit(){}
+    onDestroy(){}
+    onPreShow(){}
 }
 
 export class SourceInputView extends InputView {
@@ -44,6 +48,9 @@ export class SourceInputView extends InputView {
         }
         this.host.next( 'start' );
     }
+    onInit(){}
+    onDestroy(){}
+    onPreShow(){}
 }
 
 export class TemporaryInputView extends InputView {
@@ -62,5 +69,8 @@ export class TemporaryInputView extends InputView {
         }
         this.host.next( 'start' );
     }
+    onInit(){}
+    onDestroy(){}
+    onPreShow(){}
 }
 

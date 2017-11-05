@@ -21,9 +21,7 @@ export abstract class ListView extends View {
         this.actions = {};
     }
 
-    execute( name: string, param?: any ): void {
-    }
-    protected preShow(): void {}
+    protected abstract onPreShow(): void;
     protected abstract message(): string;
     protected process( input: string ) {
         let action = this.actions[ input ];
@@ -32,7 +30,7 @@ export abstract class ListView extends View {
         }
     }
     show( param?: any ) {
-        this.preShow();
+        this.onPreShow();
         prompt( {
             type: 'list',
             name: 'chosed',
