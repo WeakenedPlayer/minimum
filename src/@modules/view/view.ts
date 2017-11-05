@@ -27,21 +27,28 @@ export class ViewHost {
     private refSubject: Subject<ViewRef> = new Subject();
     private show$: Observable<void>;
     private subscription: Subscription = new Subscription();
+    private lastView: View = null;
     
     constructor() {
         this.show$ = this.refSubject
         .flatMap( ref => {
+            let lastView = this.lastView;
+            if( lastView ) {
+                lastView.onClose();
+            }
+
             let view = this.views[ ref.id ];
             if( view ) {
                 //console.log( 'views/opened: ' + ref.id );
+                view.onOpen();
                 return Observable.fromPromise(
                     view.show( ref.param )
                     .then( ( answer: any ) => {
                         //console.log( 'views/closed' );
-                        view.onClose();
                         view.processAnswer( answer );
+                        this.lastView = view;
                     }, ( err ) => {
-                        view.onClose();
+                        // do nothing
                     } )
                 );
             }
