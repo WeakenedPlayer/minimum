@@ -17,7 +17,7 @@ export class ConnectedView extends ListView {
     constructor( private controller: BotController ) {
         super();
         this.add( 'Activate/Deactivate broadcast...', () => { } );
-        this.add( 'Select channel...', () => {} );
+        this.add( 'Select channel...', () => { this.host.next( 'guild-select' ) } );
         this.add( 'Logout', () => { this.controller.logout() } );
         this.add( 'Quit',() => {
             this.unsubscribe();
