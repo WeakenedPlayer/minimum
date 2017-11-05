@@ -4,7 +4,6 @@ import { Observable, Subscription } from 'rxjs';
 export class StartView extends ListView {
     private spinner = new clui.Spinner( 'Logging in...', ['◜','◠','◝','◞','◡','◟'] );
     private spinnerObservable: Observable<void>;
-    private loggedInObservable: Observable<void>;
     private subscription = new Subscription();
     
     constructor( private controller: BotController ) {
@@ -12,13 +11,26 @@ export class StartView extends ListView {
         this.add( 'Source directory...', ( () => { this.host.next( 'source-input' ); } ) );
         this.add( 'Temporary directory...',  ( () => { this.host.next( 'temporary-input' ); } ) );
         this.add( 'Discord App Token...',  ( () => { this.host.next( 'token-input' ); } ) );
-        this.add( 'Login', () => { this.controller.login(); } );
+        this.add( 'Login', () => { 
+            this.controller.login()
+            .then( () => {
+                this.host.next( 'connected' );
+            }, ( err ) => {
+                this.host.next( 'start', 'Login failed...' );
+            } ); 
+        } );
         this.add( 'Quit',() => { process.exit(); } );
     }
+
+    private unsubscribe() {
+        if( !this.subscription.closed ) {
+            this.subscription.unsubscribe();
+            this.subscription = new Subscription();
+        }
+    }
     
-    protected onPreShow() {
-        this.subscription.add( this.spinnerObservable.subscribe() );
-        this.subscription.add( this.loggedInObservable.subscribe() );
+    protected message(): string {
+        return 'Offline menu:';
     }
     
     onInit() {
@@ -32,28 +44,13 @@ export class StartView extends ListView {
                 this.spinner.stop();
             }
         } );
-        
-        this.loggedInObservable = this.controller.state$
-        .map( state => state.connected )
-        .distinctUntilChanged()
-        .map( connected => {
-            console.log( connected );
-            if( connected ) {
-                this.host.next( 'connected' );
-                this.subscription.unsubscribe();
-            }
-        } );
     }
 
+    protected onPreShow() {
+        this.subscription.add( this.spinnerObservable.subscribe() );
+    }
     
-
     onDestroy() {
-        if( !this.subscription.closed ) {
-            this.subscription.unsubscribe();
-        }
-    }
-    
-    protected message(): string {
-        return 'Offline menu:';
+        this.unsubscribe();
     }
 }
