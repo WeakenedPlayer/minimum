@@ -8,9 +8,9 @@ export class StartView extends ListView {
     
     constructor( private controller: BotController ) {
         super();
-        this.add( 'Source directory...', ( () => { this.host.next( 'source-input' ); } ) );
-        this.add( 'Temporary directory...',  ( () => { this.host.next( 'temporary-input' ); } ) );
-        this.add( 'Discord App Token...',  ( () => { this.host.next( 'token-input' ); } ) );
+        this.add( 'Source directory...', ( () => { console.log('dir'); this.host.next( 'source-input' ); } ) );
+        this.add( 'Temporary directory...',  ( () => { console.log('dir'); this.host.next( 'temporary-input' ); } ) );
+        this.add( 'Discord App Token...',  ( () => {console.log('dir');  this.host.next( 'token-input' ); } ) );
         this.add( 'Login', () => { 
             this.controller.login()
             .then( () => {
@@ -45,12 +45,16 @@ export class StartView extends ListView {
             }
         } );
     }
-
-    protected onPreShow() {
+    
+    onOpen(): void {
+        // clear();
+        console.log( 'start-view/open' );
         this.subscription.add( this.spinnerObservable.subscribe() );
     }
     
-    onDestroy() {
+    onClose(): void {
+        console.log( 'start-view/close' );
+        this.spinner.stop();
         this.unsubscribe();
     }
 }

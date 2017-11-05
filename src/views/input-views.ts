@@ -5,10 +5,6 @@ export class TokenInputView extends InputView {
         super();
     }
     
-    protected preShow(): void {
-        clear();
-    }
-    
     protected message(): string {
         let token = this.pref.token;
         let message: string;
@@ -20,7 +16,8 @@ export class TokenInputView extends InputView {
         return message;
     }
     
-    protected process( input: string ): void  {
+    processAnswer( input: string ): void  {
+        console.log( input );
         if( input ) {
             this.pref.token = input;            
         }
@@ -28,49 +25,58 @@ export class TokenInputView extends InputView {
     }
 
     onInit(){}
-    onDestroy(){}
-    onPreShow(){}
+    onClose(){
+        console.log( 'TokenInputView/close' );
+    }
+    onOpen(){
+        // clear();
+        console.log( 'TokenInputView/open' );
+    }
 }
 
 export class SourceInputView extends InputView {
     constructor( private pref: BotPreference ) {
         super();
     }
-    protected preShow(): void {
-        clear();
-    }
     protected message(): string {
         return 'Input Source Directory: ';
     }
-    protected process( input: string ): void  {
+    processAnswer( input: string ): void  {
         if( input ) {
             this.pref.source = input;            
         }
         this.host.next( 'start' );
     }
     onInit(){}
-    onDestroy(){}
-    onPreShow(){}
+    onClose(){
+        console.log( 'SourceInputView/close' );
+    }
+    onOpen(){
+        // clear();
+        console.log( 'SourceInputView/open' );
+    }
 }
 
 export class TemporaryInputView extends InputView {
     constructor( private pref: BotPreference ) {
         super();
     }
-    protected preShow(): void {
-        clear();
-    }
     protected message(): string {
         return 'Input Temporary Directory: ';
     }
-    protected process( input: string ): void {
+    processAnswer( input: string ): void  {
         if( input ) {
             this.pref.temporary = input;            
         }
         this.host.next( 'start' );
     }
     onInit(){}
-    onDestroy(){}
-    onPreShow(){}
+    onClose(){
+        console.log( 'TemporaryInputView/close' );
+    }
+    onOpen(){
+        // clear();
+        console.log( 'TemporaryInputView/open' );
+    }
 }
 
