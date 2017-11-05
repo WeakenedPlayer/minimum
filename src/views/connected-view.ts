@@ -16,23 +16,13 @@ export class ConnectedView extends ListView {
     
     constructor( private controller: BotController ) {
         super();
-        this.add( 'Activate/Deactivate broadcast...', () => { 
-        } );
-        
-        this.add( 'Select channel...', () => {
-        } );
-        
-        this.add( 'Logout', () => { 
-            this.controller.logout()
-            .then( () => {
-                this.host.next( 'start' );
-            } );
-        } );
-        
+        this.add( 'Activate/Deactivate broadcast...', () => { } );
+        this.add( 'Select channel...', () => {} );
+        this.add( 'Logout', () => { this.controller.logout() } );
         this.add( 'Quit',() => {
+            this.unsubscribe();
             this.controller.logout()
             .then( () => {
-                this.unsubscribe();
                 process.exit();
             } );
         } );
@@ -52,23 +42,11 @@ export class ConnectedView extends ListView {
             }
         } );
         
-        this.spinnerObservable = this.controller.state$
-        .map( state => state.busy )
-        .distinctUntilChanged()
-        .map( ( busy ) => {
-            if( busy ) {
-                clear();
-                this.spinner.start();
-            } else {
-                this.spinner.stop();
-            }
-        } );
     }
 
     onOpen() {
-        //clear();
+        clear();
         this.subscription.add( this.disconnectionObservable.subscribe() );
-        this.subscription.add( this.spinnerObservable.subscribe() );
     }
     
     onClose() {

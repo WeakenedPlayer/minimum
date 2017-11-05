@@ -45,8 +45,8 @@ export class ViewHost {
                     view.show( ref.param )
                     .then( ( answer: any ) => {
                         //console.log( 'views/closed' );
-                        view.processAnswer( answer );
                         this.lastView = view;
+                        view.processAnswer( answer );
                     }, ( err ) => {
                         // do nothing
                     } )

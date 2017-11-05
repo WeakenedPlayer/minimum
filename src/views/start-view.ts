@@ -30,43 +30,15 @@ export class StartView extends ListView {
         return 'Offline menu:';
     }
     
-    /*    private unsubscribe() {
-        if( !this.subscription.closed ) {
-            this.subscription.unsubscribe();
-            this.subscription = new Subscription();
-        }
-    }*/
-    
-    
     onInit() {
-/*      this.busyObservable = this.controller.state$.map( state => state.busy )
-        .distinctUntilChanged()
-        .publish()
-        .refCount();
-        
-        this.spinnerObservable = this.controller.state$.map( state => state.busy )
-        .filter( busy => busy )
-        .flatMap( ( busy ) => {
-            // busy になったら Spinnerを開始し、busyでなくなったら止めるようにする。
-            this.spinner.start();
-            return this.busyObservable
-            .filter( busy => !busy )
-            .map( () => {
-                this.spinner.stop();
-            } );
-        } );
-*/
     }
     
     onOpen(): void {
-        // clear();
-        // console.log( 'start-view/open' );
-        // this.subscription.add( this.spinnerObservable.subscribe() );
+        clear();
     }
     
     onClose(): void {
         // console.log( 'start-view/close' );
-         this.spinner.stop();
-        // this.unsubscribe();
+        //  this.spinner.stop();
     }
 }
