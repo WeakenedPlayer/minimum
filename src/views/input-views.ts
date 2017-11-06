@@ -15,68 +15,65 @@ export class TokenInputView extends InputView {
         }
         return message;
     }
-    
-    processAnswer( input: string ): void  {
-        // console.log( input );
-        if( input ) {
-            this.pref.token = input;            
-        }
-        this.host.next( 'start' );
+
+    public show( param?: any ): Promise<void> {
+        // clear();
+        console.log( 'TokenInputView/show')
+        return this.showPrompt()
+        .then( (input) => {
+            if( input ) {
+                this.pref.token = input;            
+            }
+            this.host.back();
+        } );
     }
 
-    onInit(){}
-    onClose(){
-        // console.log( 'TokenInputView/close' );
-    }
-    onOpen(){
-        clear();
-        // console.log( 'TokenInputView/open' );
-    }
+    public onInit(): void {}
 }
 
 export class SourceInputView extends InputView {
     constructor( private pref: BotPreference ) {
         super();
     }
+    
     protected message(): string {
         return 'Input Source Directory: \n';
     }
-    processAnswer( input: string ): void  {
-        if( input ) {
-            this.pref.source = input;            
-        }
-        this.host.next( 'start' );
+    
+    public show( param?: any ): Promise<void> {
+        // clear();
+        return this.showPrompt()
+        .then( (input) => {
+            if( input ) {
+                this.pref.source = input;            
+            }
+            this.host.back();
+        } );
     }
-    onInit(){}
-    onClose(){
-        // console.log( 'TemporaryInputView/close' );
-    }
-    onOpen(){
-        clear();
-        // console.log( 'TemporaryInputView/open' );
-    }
+    
+    public onInit(): void {}
 }
 
 export class TemporaryInputView extends InputView {
     constructor( private pref: BotPreference ) {
         super();
     }
+    
     protected message(): string {
         return 'Input Temporary Directory: ';
     }
-    processAnswer( input: string ): void  {
-        if( input ) {
-            this.pref.temporary = input;            
-        }
-        this.host.next( 'start' );
+    
+    public show( param?: any ): Promise<void> {
+        // clear();
+        return this.showPrompt()
+        .then( (input) => {
+            if( input ) {
+                this.pref.temporary = input;            
+            }
+            this.host.back();
+        } );
     }
-    onInit(){}
-    onClose(){
-        // console.log( 'TemporaryInputView/close' );
-    }
-    onOpen(){
-        clear();
-        // console.log( 'TemporaryInputView/open' );
-    }
+
+    public onInit(): void {}
 }
 

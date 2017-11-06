@@ -22,24 +22,30 @@ export abstract class ListView extends View {
     }
 
     protected abstract message(): string;
-    show( param?: any ): Promise<any> {
+    
+    protected showAndExecute( param?: any ): Promise<void> {
+        return this.showPrompt( param )
+        .then( ( command ) => {
+            console.log( command )
+            this.execute( command );
+        } );
+    }
+    
+    protected showPrompt( param?: any ): Promise<string> {
         return prompt( {
             type: 'list',
             name: 'chosen',
             choices: this.choices,
             message: this.message(),
-        } ).then( ( answer ) => {
+        } ).then( answer => {
             return answer.chosen;
         } );
     }
     
-    processAnswer( answer: string ): void {
-        // console.log( answer );
-        let action = this.actions[ answer ];
+    protected execute( command: string ): void {
+        let action = this.actions[ command ];
         if( action ) {
-            //console.log( 'ListView/action' );
             action();
         }
-        //console.log( 'ListView/processAnswer' );
     }
 }

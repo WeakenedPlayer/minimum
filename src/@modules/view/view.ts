@@ -1,6 +1,11 @@
 import { inquirer } from './cli';
 import { Subject, Observable, Subscription } from 'rxjs';
 
+interface ViewRef {
+    id: string;
+    param?: any;
+}
+
 export abstract class View {
     protected host: ViewHost = null;
     
@@ -10,47 +15,28 @@ export abstract class View {
         this.host = host;
     }
     public abstract onInit(): void;
-    public abstract onOpen(): void;
-    public abstract onClose(): void;
-    public abstract show( param?: any ): Promise<any>;
-    public abstract processAnswer( answer?: any): void;
-}
-
-interface ViewRef {
-    id: string;
-    param?: any;
+    public abstract show( param?: any ): Promise<void>;
 }
 
 export class ViewHost {
     private views: { [id:string]: View } = {};
-    private cancelSubject: Subject<string> = new Subject();
     private refSubject: Subject<ViewRef> = new Subject();
     private show$: Observable<void>;
     private subscription: Subscription = new Subscription();
-    private lastView: View = null;
+    private currentRef: ViewRef = null;
+    private lastRef: ViewRef = null;
     
     constructor() {
         this.show$ = this.refSubject
         .flatMap( ref => {
-            let lastView = this.lastView;
-            if( lastView ) {
-                lastView.onClose();
-            }
-
+            console.log( ref );
+            this.lastRef = ref; 
             let view = this.views[ ref.id ];
             if( view ) {
-                //console.log( 'views/opened: ' + ref.id );
-                view.onOpen();
-                return Observable.fromPromise(
-                    view.show( ref.param )
-                    .then( ( answer: any ) => {
-                        //console.log( 'views/closed' );
-                        this.lastView = view;
-                        view.processAnswer( answer );
-                    }, ( err ) => {
-                        // do nothing
-                    } )
-                );
+                this.currentRef = ref;
+                return Observable.fromPromise( view.show( ref.param ).then( () => {
+                    this.lastRef = ref; 
+                } ) );
             }
         } );
     }
@@ -66,12 +52,17 @@ export class ViewHost {
         }
     }
 
-    cancel() {
-        this.cancelSubject.error( false );
+    next( id: string, param?: any ): void {
+        console.log( id );
+        this.refSubject.next( { id: id, param: param } );
+    }
+
+    reopen( param?: any ): void {
+        this.next( this.currentRef.id, param );
     }
     
-    next( id: string, param?: any ): void {
-        this.refSubject.next( { id: id, param: param } );
+    back( param?: any ): void {
+        this.next( this.lastRef.id, param );
     }
     
     add( name: string, view: View ): void {

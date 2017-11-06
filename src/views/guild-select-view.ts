@@ -26,11 +26,21 @@ export class GuildSelectView extends ListView {
         } );
     }
 
+    private logout() {
+        this.controller.logout().then( () => {
+            this.host.next( 'home' );
+        } );
+    }
+    
     protected message(): string {
         return 'Online menu: ' + this.pref.guild;
     }
 
     onInit() {
+        /*
+        let disconnectObservable = this.controller
+        let test = Observable.fromPromise( this.showAndExecute() )
+        .takeUntil 
         this.guildObservable = this.controller.guild$.map( guilds => {
             let guild: Guild;
             this.clear();
@@ -43,22 +53,11 @@ export class GuildSelectView extends ListView {
                 } );
             }
         } );
+        */
     }
 
-    show( param?: any ): Promise<any> {
-        return this.guildObservable.take(1).toPromise()
-        .then( () => {
-            return super.show( param );
-        } );
-    }
-    
-    onOpen() {
-        clear();
-    }
-    
-    onClose() {
-        this.spinner.stop();
-        this.unsubscribe();
+    public show( param?: any ): Promise<void> {
+        return this.showAndExecute( param );
     }
 }
 

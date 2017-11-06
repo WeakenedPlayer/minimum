@@ -3,7 +3,8 @@ import { Subscription, Subject, Observable } from 'rxjs';
 
 export class ConnectedView extends ListView {
     private spinner = new clui.Spinner( 'Reconnecting...', ['◜','◠','◝','◞','◡','◟'] );
-    private disconnectionObservable: Observable<void> = null;
+    private disconnected$: Observable<boolean> = null;
+    private input$: Observable<void>;
     private spinnerObservable: Observable<void> = null;
     private subscription = new Subscription();
 
@@ -18,7 +19,7 @@ export class ConnectedView extends ListView {
         super();
         this.add( 'Activate/Deactivate broadcast...', () => { } );
         this.add( 'Select channel...', () => { this.host.next( 'guild-select' ) } );
-        this.add( 'Logout', () => { this.controller.logout() } );
+        this.add( 'Logout', () => this.logout() );
         this.add( 'Quit',() => {
             this.unsubscribe();
             this.controller.logout()
@@ -28,30 +29,47 @@ export class ConnectedView extends ListView {
         } );
     }
 
+    private logout() {
+        this.controller.logout().then( () => {
+            this.host.next( 'home' );
+        } );
+    }
+    
     protected message(): string {
         return 'Online menu:';
     }
 
     onInit() {
-        this.disconnectionObservable = this.controller.state$
+        
+        this.disconnected$ = this.controller.state$
         .map( state => !state.busy && !state.connected )
         .distinctUntilChanged()
-        .map( ( disconnected ) => {
-            if( disconnected ) {
-                this.host.next( 'start' );
-            }
+        .filter( disconnected => disconnected )
+        .publish()
+        .refCount();
+        
+        let userInput$ = Observable.of(1).flatMap( () => {
+            return Observable.fromPromise( this.showPrompt() );
+        } )
+        .takeUntil( this.disconnected$ )
+        .take( 1 )
+        .map( ( command ) => {
+            this.execute( command );
         } );
         
+
+        let postDisconnection$ = this.disconnected$
+        .take( 1 )
+        .map( () => {
+            this.host.next( 'home', 'Disconnected ;_;' );
+        } );
+        
+        this.input$ = Observable.merge( userInput$, postDisconnection$ );
     }
 
-    onOpen() {
-        clear();
-        this.subscription.add( this.disconnectionObservable.subscribe() );
-    }
-    
-    onClose() {
-        this.spinner.stop();
-        this.unsubscribe();
+    public show( param?: any): Promise<void> {
+        //        return this.showAndExecute( param );
+        return this.input$.toPromise();
     }
 }
 

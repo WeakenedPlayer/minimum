@@ -5,8 +5,10 @@ export abstract class InputView extends View {
     constructor() {
         super();
     }
+    
     protected abstract message(): string;
-    show( param?: any ): Promise<any> {
+    
+    protected showPrompt( param?: any ): Promise<string> {
         let message = this.message();
         return prompt( {
             type: 'input',
