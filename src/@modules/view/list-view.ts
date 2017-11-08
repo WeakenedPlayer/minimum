@@ -4,7 +4,7 @@ import { View } from './view';
 export abstract class ListView extends View {
     private choices: string[] = [];
     private actions: { [ name: string ]: () => void } = {};
-
+    
     constructor() {
         super();
     }
@@ -26,13 +26,13 @@ export abstract class ListView extends View {
     protected showAndExecute( param?: any ): Promise<void> {
         return this.showPrompt( param )
         .then( ( command ) => {
-            console.log( command )
+            // console.log( command )
             this.execute( command );
         } );
     }
     
     protected showPrompt( param?: any ): Promise<string> {
-        return prompt( {
+        return inquirer.prompt( {
             type: 'list',
             name: 'chosen',
             choices: this.choices,
@@ -48,4 +48,5 @@ export abstract class ListView extends View {
             action();
         }
     }
+    
 }

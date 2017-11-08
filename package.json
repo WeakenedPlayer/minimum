@@ -23,7 +23,7 @@
     "nedb": "1.8.0",
     "node-rx": "0.0.3",
     "preferences": "^0.2.1",
-    "rxjs": "~5.4.0",
+    "rxjs": "^5.4.3",
     "simple-git": "^1.79.0",
     "touch": "^3.1.0",
     "vorpal": "^1.12.0"

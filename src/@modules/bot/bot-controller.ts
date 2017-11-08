@@ -12,11 +12,12 @@ export class BotController {
     private appObservable: Observable<OAuth2App>;
     private channelObservable: Observable<{[id: string]: Channel}>;
     private guildObservable: Observable<{[id: string]: Guild}>;
+    private stateObservable: Observable<ClientState>;
 
     get app$() { return this.appObservable; }
     get channel$() { return this.channelObservable; }
     get guild$() { return this.guildObservable; }
-    get state$() { return this.bot.state$; } 
+    get state$() { return this.stateObservable; } 
 
     constructor( private pref: BotPreference ) {
         this.appObservable = this.bot.app$.map( app => {
@@ -39,10 +40,13 @@ export class BotController {
             }
             return map;
         } );
+        
+        // 最後の1要素を必ず受け取れる
+        this.stateObservable = this.bot.state$;
     }
     
     login(): Promise<string> {
-        return this.bot.login( this.pref.token );
+        return this.bot.login( this.pref.client.token );
     }
     
     logout(): Promise<void> {

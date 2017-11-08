@@ -3,9 +3,6 @@ import { Observable, Subscription } from 'rxjs';
 
 export class HomeView extends ListView {
     private spinner = new clui.Spinner( 'Logging in...', ['◜','◠','◝','◞','◡','◟'] );
-    private spinnerObservable: Observable<void>;
-    private busyObservable: Observable<boolean>;
-    private subscription = new Subscription();
     
     constructor( private controller: BotController ) {
         super();
@@ -20,14 +17,12 @@ export class HomeView extends ListView {
         this.spinner.start();
         this.controller.login()
         .then( () => {
-            console.log( 'connected' );
             this.spinner.stop();
-            this.host.next( 'connected' );
+            this.host.next( 'connected', chalk.bgBlue('Login Succeed.') );
         }, ( err ) => {
-            console.log( 'failed' );
             this.spinner.stop();
-            this.host.reopen( chalk.bgRed('Login failed.}\n') );
-        } ); 
+            this.host.reopen( { message: chalk.bgRed('Login failed.') } );
+        } );
     }
     
     protected message(): string {
@@ -35,11 +30,17 @@ export class HomeView extends ListView {
     }
     
     public onInit(): void {}
+    
     public show( param?: any ): Promise<void> {
-        // clear();
+        clear();
+        if( param && param.message ) {
+            console.log( param.message );
+        }
         return this.showAndExecute( param )
         .catch( ( err ) => {
-            this.host.reopen( err );
+            console.log('------------------------------------------------------------------------------------\n');
+            console.log( err );
+            console.log('------------------------------------------------------------------------------------\n');
         } ); 
     }
 }

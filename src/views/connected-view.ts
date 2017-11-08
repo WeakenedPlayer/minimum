@@ -1,27 +1,27 @@
 import { prompt, inquirer, clear, chalk, clui, ListView, BotController } from '../@modules';
 import { Subscription, Subject, Observable } from 'rxjs';
 
+// 不具合事例…画面が重なることが問題。→画面の遷移を禁止できれば良い
+
 export class ConnectedView extends ListView {
     private spinner = new clui.Spinner( 'Reconnecting...', ['◜','◠','◝','◞','◡','◟'] );
     private disconnected$: Observable<boolean> = null;
+    private postDisconnection$: Observable<void> = null;
     private input$: Observable<void>;
-    private spinnerObservable: Observable<void> = null;
+    private spinner$: Observable<void> = null;
     private subscription = new Subscription();
-
-    private unsubscribe() {
-        if( !this.subscription.closed ) {
-            this.subscription.unsubscribe();
-            this.subscription = new Subscription();
-        }
-    }
     
     constructor( private controller: BotController ) {
         super();
         this.add( 'Activate/Deactivate broadcast...', () => { } );
         this.add( 'Select channel...', () => { this.host.next( 'guild-select' ) } );
-        this.add( 'Logout', () => this.logout() );
+        this.add( 'Logout', () => {
+            this.controller.logout()
+            .then( () => {
+                this.host.next( 'home' );
+            } );            
+        } );
         this.add( 'Quit',() => {
-            this.unsubscribe();
             this.controller.logout()
             .then( () => {
                 process.exit();
@@ -29,47 +29,32 @@ export class ConnectedView extends ListView {
         } );
     }
 
-    private logout() {
-        this.controller.logout().then( () => {
-            this.host.next( 'home' );
-        } );
-    }
-    
     protected message(): string {
         return 'Online menu:';
     }
 
-    onInit() {
-        
-        this.disconnected$ = this.controller.state$
-        .map( state => !state.busy && !state.connected )
-        .distinctUntilChanged()
-        .filter( disconnected => disconnected )
-        .publish()
-        .refCount();
-        
-        let userInput$ = Observable.of(1).flatMap( () => {
-            return Observable.fromPromise( this.showPrompt() );
-        } )
-        .takeUntil( this.disconnected$ )
-        .take( 1 )
-        .map( ( command ) => {
-            this.execute( command );
-        } );
-        
-
-        let postDisconnection$ = this.disconnected$
-        .take( 1 )
-        .map( () => {
-            this.host.next( 'home', 'Disconnected ;_;' );
-        } );
-        
-        this.input$ = Observable.merge( userInput$, postDisconnection$ );
-    }
-
+    onInit() {}
+    
     public show( param?: any): Promise<void> {
-        //        return this.showAndExecute( param );
-        return this.input$.toPromise();
+        let command: string;
+        clear();
+        if( param && param.message ) {
+            console.log( param.message );
+        }
+        return this.showPrompt()
+        .then( result => {
+            command = result;
+            return this.controller.state$.take(1).toPromise();
+        } )
+        .then( state => {
+            if( state.busy ) {
+                this.host.reopen( { message: 'Client is busy...Try again.' } );
+            } else if( !state.connected ) {
+                this.host.next( 'home', { message: 'Disconnected...' })
+            } else {
+                this.execute( command );
+            }
+        } );
     }
 }
 

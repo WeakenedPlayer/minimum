@@ -2,62 +2,44 @@ import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPrefe
 import { Subscription, Subject, Observable } from 'rxjs';
 
 export class GuildSelectView extends ListView {
-    private spinner = new clui.Spinner( 'Reconnecting...', ['◜','◠','◝','◞','◡','◟'] );
-    private guildObservable: Observable<void>;
-    private spinnerObservable: Observable<void> = null;
-    private subscription = new Subscription();
-
-    private unsubscribe() {
-        if( !this.subscription.closed ) {
-            this.subscription.unsubscribe();
-            this.subscription = new Subscription();
-        }
-    }
     
     constructor( private controller: BotController, private pref: BotPreference  ) {
         super();
-        this.add( 'Logout', () => { this.controller.logout() } );
-        this.add( 'Quit',() => {
-            this.unsubscribe();
-            this.controller.logout()
-            .then( () => {
-                process.exit();
-            } );
-        } );
     }
 
-    private logout() {
-        this.controller.logout().then( () => {
-            this.host.next( 'home' );
+    protected message(): string {
+        return 'Select guild...\n Current guild: ' + this.pref.client.guild.name;
+    }
+
+    private addGuildCommand( guild: Guild ) {
+        this.add( guild.id + ': ' + guild.name, () => {
+            this.pref.client.guild.id = guild.id;
+            this.pref.client.guild.name = guild.name;
+            this.host.next( 'channel-select', { guildId: guild.id });
         } );
     }
     
-    protected message(): string {
-        return 'Online menu: ' + this.pref.guild;
-    }
-
-    onInit() {
-        /*
-        let disconnectObservable = this.controller
-        let test = Observable.fromPromise( this.showAndExecute() )
-        .takeUntil 
-        this.guildObservable = this.controller.guild$.map( guilds => {
-            let guild: Guild;
-            this.clear();
-            
+    private createMenu(): Promise<void> {
+        this.clear();
+        this.add( 'Back', () => { this.host.next( 'connected' ) } );
+        this.add( new inquirer.Separator(), ()=>{} );
+        return this.controller.guild$.take(1).toPromise()
+        .then( guilds => {
             for( let id in guilds ) {
-                guild = guilds[ id ];
-                this.add( guild.id + ': ' + guild.name, () => {
-                    this.pref.guild = guild.id;
-                    this.host.next( 'connected', 'Selected: ' + guild.name );
-                } );
+                this.addGuildCommand( guilds[ id ] );
             }
         } );
-        */
+    }
+        
+    onInit() {
     }
 
     public show( param?: any ): Promise<void> {
-        return this.showAndExecute( param );
+        clear();
+        return this.createMenu()
+        .then( () => {
+            return this.showAndExecute();
+        } );
     }
 }
 

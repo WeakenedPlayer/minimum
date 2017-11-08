@@ -1,11 +1,37 @@
 import { Subject, Subscription, Observable } from 'rxjs';
 var Preferences = require("preferences");
 
+export interface BotPreference {
+    client: {
+        token: string;
+        guild: { 
+            id: string;
+            name: string;
+        };
+        channel: {
+            id: string;
+            name: string;
+            guildId: string;
+        };
+    };
+    directory: {
+        src: string;
+        tmp: string;
+    }
+}
+
 const initValue = {
     client: {
         token: '',
-        guild: '',
-        channel: '',
+        guild: {
+            id: '',
+            name: '',
+        },
+        channel: {
+            id: '',
+            name: '',
+            guildId: '',
+        }
     },
     directory: {
         src: 'screen-shot directory',
@@ -13,22 +39,6 @@ const initValue = {
     }
 };
 
-export class BotPreference {
-    private pref: any;
-    constructor( id: string ){
-        this.pref = new Preferences( id, initValue );
-    } 
-    set token( token: string ){ this.pref.client.token = token; }
-    get token(): string {
-        return this.pref.client.token;
-    }
-
-    set source( source: string ){ this.pref.directory.source = source; }
-    get source(): string { return this.pref.directory.source; }
-
-    set temporary( temporary: string ){ this.pref.directory.temporary = temporary; }
-    get temporary(): string { return this.pref.directory.temporary; }
-    
-    set guild( guild: string ){ this.pref.directory.guild = guild; }
-    get guild(): string { return this.pref.directory.temporary; }
+export function createPreference( id: string ): BotPreference {
+    return new Preferences( id, initValue );
 }

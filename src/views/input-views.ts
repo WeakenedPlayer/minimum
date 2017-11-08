@@ -6,7 +6,7 @@ export class TokenInputView extends InputView {
     }
     
     protected message(): string {
-        let token = this.pref.token;
+        let token = this.pref.client.token;
         let message: string;
         if( token ) {
             message = 'Input token\n  Current value: ' + token + '\n  New value    :'; 
@@ -22,7 +22,7 @@ export class TokenInputView extends InputView {
         return this.showPrompt()
         .then( (input) => {
             if( input ) {
-                this.pref.token = input;            
+                this.pref.client.token = input;            
             }
             this.host.back();
         } );
@@ -45,7 +45,7 @@ export class SourceInputView extends InputView {
         return this.showPrompt()
         .then( (input) => {
             if( input ) {
-                this.pref.source = input;            
+                this.pref.directory.src = input;            
             }
             this.host.back();
         } );
@@ -68,7 +68,7 @@ export class TemporaryInputView extends InputView {
         return this.showPrompt()
         .then( (input) => {
             if( input ) {
-                this.pref.temporary = input;            
+                this.pref.directory.tmp = input;            
             }
             this.host.back();
         } );
