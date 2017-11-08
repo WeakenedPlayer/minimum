@@ -1,4 +1,4 @@
-import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPreference, Channel } from '../@modules';
+import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPreference, Channel, Guild } from '../@modules';
 import { Subscription, Subject, Observable } from 'rxjs';
 
 export class ChannelSelectView extends ListView {
@@ -7,7 +7,7 @@ export class ChannelSelectView extends ListView {
     }
 
     protected message(): string {
-        return 'Select channel...\n Current channel: ' + this.pref.client.channel.name;
+        return 'Current guild/channel: ' + this.pref.client.guild.name + '/' + this.pref.client.channel.name + '\nSelect channel...';
     }
 
     private clearChannel() {
@@ -16,16 +16,18 @@ export class ChannelSelectView extends ListView {
         this.pref.client.channel.guildId = '';
     }
     
-    private addChannelCommand( channel: Channel ) {
+    private addChannelCommand( channel: Channel, guild: Guild ) {
         this.add( channel.id + ': ' + channel.name, () => {
             this.pref.client.channel.id   = channel.id;
             this.pref.client.channel.name = channel.name;
             this.pref.client.channel.guildId = channel.guildId;
+            this.pref.client.guild.id = guild.id;
+            this.pref.client.guild.name = guild.name;
             this.host.next( 'connected' );
         } );
     }
     
-    private createMenu( guildId: string ): Promise<void> {
+    private createMenu( guild: Guild ): Promise<void> {
         this.clear();
         this.add( 'Back', () => { this.host.back() } );
         this.add( new inquirer.Separator(), ()=>{} );
@@ -33,8 +35,8 @@ export class ChannelSelectView extends ListView {
         .then( channels => {
             for( let id in channels ) {
                 let channel = channels[ id ];
-                if( channel.guildId === guildId ) {
-                    this.addChannelCommand( channels[ id ] );
+                if( channel.guildId === guild.id ) {
+                    this.addChannelCommand( channels[ id ], guild );
                 } 
             }
         } );
@@ -44,15 +46,10 @@ export class ChannelSelectView extends ListView {
     }
 
     public show( param?: any ): Promise<void> {
-        if( param && param.guildId ) {
+        if( param && param.guild ) {
             clear();
             
-            // guildId が変わっていたら、既に選択していたのを削除する
-            if( param.guildId !== this.pref.client.channel.guildId ) {
-                this.clearChannel();
-            }
-            
-            return this.createMenu( param.guildId )
+            return this.createMenu( param.guild )
             .then( () => {
                 return this.showAndExecute( param );
             } ); 

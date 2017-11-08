@@ -8,14 +8,12 @@ export class GuildSelectView extends ListView {
     }
 
     protected message(): string {
-        return 'Select guild...\n Current guild: ' + this.pref.client.guild.name;
+        return 'Current guild/channel: ' + this.pref.client.guild.name + '/' + this.pref.client.channel.name + '\nSelect guild...';
     }
 
     private addGuildCommand( guild: Guild ) {
         this.add( guild.id + ': ' + guild.name, () => {
-            this.pref.client.guild.id = guild.id;
-            this.pref.client.guild.name = guild.name;
-            this.host.next( 'channel-select', { guildId: guild.id });
+            this.host.next( 'channel-select', { guild: guild } );
         } );
     }
     
