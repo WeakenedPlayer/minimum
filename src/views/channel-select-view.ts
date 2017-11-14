@@ -7,7 +7,7 @@ export class ChannelSelectView extends ListView {
     }
 
     protected message(): string {
-        return 'Current guild/channel: ' + this.pref.client.guild.name + '/' + this.pref.client.channel.name + '\nSelect channel...';
+        return 'Current guild/channel: ' + this.pref.client.guild.name + '/' + this.pref.client.channel.name + '\n    Select channel...';
     }
 
     private clearChannel() {
@@ -29,8 +29,9 @@ export class ChannelSelectView extends ListView {
     
     private createMenu( guild: Guild ): Promise<void> {
         this.clear();
+        this.addSeparator();
         this.add( 'Back', () => { this.host.back() } );
-        this.add( new inquirer.Separator(), ()=>{} );
+        this.addSeparator();
         return this.controller.channel$.take(1).toPromise()
         .then( channels => {
             for( let id in channels ) {
@@ -47,7 +48,7 @@ export class ChannelSelectView extends ListView {
 
     public show( param?: any ): Promise<void> {
         if( param && param.guild ) {
-            clear();
+         //   clear();
             
             return this.createMenu( param.guild )
             .then( () => {

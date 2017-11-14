@@ -10,29 +10,18 @@
   },
   "keywords": [],
   "dependencies": {
-    "@weakenedplayer/screenshot-bot": "0.0.9-beta.1",
+    "@weakenedplayer/screenshot-bot": "0.1.0-beta.9",
     "chalk": "^2.1.0",
     "clear": "0.0.1",
     "clui": "^0.3.6",
-    "discord.js": "^11.2.1",
     "figlet": "^1.2.0",
-    "github": "^11.0.0",
     "inquirer": "^3.3.0",
-    "lodash": "^4.17.4",
-    "minimist": "^1.2.0",
-    "nedb": "1.8.0",
-    "node-rx": "0.0.3",
     "preferences": "^0.2.1",
-    "rxjs": "^5.4.3",
-    "simple-git": "^1.79.0",
-    "touch": "^3.1.0",
-    "vorpal": "^1.12.0"
+    "rxjs": "^5.4.3"
   },
   "author": "WeakenedPlayer",
   "license": "MIT",
   "devDependencies": {
-    "@types/nedb": "^1.8.4",
-    "ginit": "^2.0.2",
     "nexe": "^2.0.0-rc.11"
   }
 }

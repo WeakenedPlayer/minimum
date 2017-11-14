@@ -1,13 +1,11 @@
-import { ScreenshotBot, ScreenshotBotOption, JpegOutputOption, ClientState } from '@weakenedplayer/screenshot-bot';
-import { Subscription, Observable } from 'rxjs';
+import { ScreenshotBot, JpegConverterOption, ClientState } from '@weakenedplayer/screenshot-bot';
+import { Subscription, Observable, Subject } from 'rxjs';
 import { OAuth2App, Channel, Guild } from './models';
 
 import { BotPreference } from './bot-preference';
 
 export class BotController {
     private bot: ScreenshotBot = new ScreenshotBot();
-
-    private mergedObservables: Observable<any>;
 
     private appObservable: Observable<OAuth2App>;
     private channelObservable: Observable<{[id: string]: Channel}>;
@@ -19,10 +17,13 @@ export class BotController {
     get guild$() { return this.guildObservable; }
     get state$() { return this.stateObservable; } 
 
+    private subscription: Subscription = new Subscription();
+    
     constructor( private pref: BotPreference ) {
         this.appObservable = this.bot.app$.map( app => {
             return new OAuth2App( app.id, app.name, app.description, app.iconURL, app.botPublic );
         } );
+        
         this.channelObservable = this.bot.textChannel$.map( channels => {
             let map: {[id: string]: Channel } = {};
             for( let id in channels ) {
@@ -41,8 +42,18 @@ export class BotController {
             return map;
         } );
         
-        // 最後の1要素を必ず受け取れる
-        this.stateObservable = this.bot.state$;
+        this.stateObservable = this.bot.state$.shareReplay();
+        
+        // configure(initial)
+        this.subscription = this.bot.post$.subscribe();
+        this.bot.filter = this.pref.directory.src;
+        this.bot.option = new JpegConverterOption( this.pref.directory.tmp );
+    }
+    
+    private update() {
+        this.bot.channelId = this.pref.client.channel.id;
+        this.bot.filter = this.pref.directory.src;
+        this.bot.option = new JpegConverterOption( this.pref.directory.tmp );
     }
     
     login(): Promise<string> {
@@ -51,5 +62,15 @@ export class BotController {
     
     logout(): Promise<void> {
         return this.bot.logout();
+    }
+    
+    start(): void {
+        this.update();
+        this.bot.post$.subscribe();
+        this.bot.startPosting();
+    }
+    
+    stop(): void {
+        this.bot.stopPostiong();
     }
 }

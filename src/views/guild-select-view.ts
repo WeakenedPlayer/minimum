@@ -8,10 +8,10 @@ export class GuildSelectView extends ListView {
     }
 
     protected message(): string {
-        return 'Current guild/channel: ' + this.pref.client.guild.name + '/' + this.pref.client.channel.name + '\nSelect guild...';
+        return 'Current guild/channel: ' + this.pref.client.guild.name + '/' + this.pref.client.channel.name + '\n    Select guild...';
     }
 
-    private addGuildCommand( guild: Guild ) {
+    private addGuildCommand( guild: Guild ): void {
         this.add( guild.id + ': ' + guild.name, () => {
             this.host.next( 'channel-select', { guild: guild } );
         } );
@@ -19,8 +19,10 @@ export class GuildSelectView extends ListView {
     
     private createMenu(): Promise<void> {
         this.clear();
+        this.addSeparator();
         this.add( 'Back', () => { this.host.next( 'connected' ) } );
-        this.add( new inquirer.Separator(), ()=>{} );
+        this.addSeparator();
+        
         return this.controller.guild$.take(1).toPromise()
         .then( guilds => {
             for( let id in guilds ) {
@@ -29,14 +31,13 @@ export class GuildSelectView extends ListView {
         } );
     }
         
-    onInit() {
-    }
+    onInit() {}
 
     public show( param?: any ): Promise<void> {
-        clear();
+       // clear();
         return this.createMenu()
         .then( () => {
-            return this.showAndExecute();
+            return this.showAndExecute( param );
         } );
     }
 }

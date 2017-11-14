@@ -9,7 +9,9 @@ export class HomeView extends ListView {
         this.add( 'Source directory...', ( () => { this.host.next( 'source-input' ); } ) );
         this.add( 'Temporary directory...',  ( () => {this.host.next( 'temporary-input' ); } ) );
         this.add( 'Discord App Token...',  ( () => { this.host.next( 'token-input' ); } ) );
+        this.addSeparator();
         this.add( 'Login', () => { this.login(); } );
+        this.addSeparator();
         this.add( 'Quit',() => { process.exit(); } );
     }
 
@@ -32,10 +34,7 @@ export class HomeView extends ListView {
     public onInit(): void {}
     
     public show( param?: any ): Promise<void> {
-        clear();
-        if( param && param.message ) {
-            console.log( param.message );
-        }
+        ///clear();
         return this.showAndExecute( param )
         .catch( ( err ) => {
             console.log('------------------------------------------------------------------------------------\n');

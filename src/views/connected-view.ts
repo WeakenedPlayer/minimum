@@ -5,28 +5,46 @@ import { Subscription, Subject, Observable } from 'rxjs';
 
 export class ConnectedView extends ListView {
     private spinner = new clui.Spinner( 'Reconnecting...', ['◜','◠','◝','◞','◡','◟'] );
-    private disconnected$: Observable<boolean> = null;
-    private postDisconnection$: Observable<void> = null;
-    private input$: Observable<void>;
-    private spinner$: Observable<void> = null;
-    private subscription = new Subscription();
+    private isActive: boolean = false;
     
     constructor( private controller: BotController ) {
         super();
-        this.add( 'Activate/Deactivate broadcast...', () => { } );
+        this.add( 'Activate/Deactivate broadcast...', () => { this.toggle() } );
         this.add( 'Select channel...', () => { this.host.next( 'guild-select' ) } );
-        this.add( 'Logout', () => {
-            this.controller.logout()
-            .then( () => {
-                this.host.next( 'home' );
-            } );            
+        this.addSeparator();
+        this.add( 'Logout', () => { this.logout() } );
+        this.addSeparator();
+        this.add( 'Quit',() => { this.quit() } );
+    }
+    
+    private toggle(): void {
+        let message = '';
+        
+        if( this.isActive ) {
+            message = 'Inactive';
+            this.controller.stop();
+            this.isActive = false;
+        } else {
+            message = 'Active';
+            this.controller.start();
+            this.isActive = true;
+        }
+        
+        this.host.reopen( { message: message } );
+    }
+    
+    private quit(): void {
+        this.controller.logout()
+        .then( () => {
+            process.exit();
         } );
-        this.add( 'Quit',() => {
-            this.controller.logout()
-            .then( () => {
-                process.exit();
-            } );
-        } );
+    }
+    
+    private logout(): void {
+        this.controller.logout()
+        .then( () => {
+            this.host.next( 'home' );
+        } );      
     }
 
     protected message(): string {
@@ -37,11 +55,8 @@ export class ConnectedView extends ListView {
     
     public show( param?: any): Promise<void> {
         let command: string;
-        clear();
-        if( param && param.message ) {
-            console.log( param.message );
-        }
-        return this.showPrompt()
+       // clear();
+        return this.showPrompt( param )
         .then( result => {
             command = result;
             return this.controller.state$.take(1).toPromise();

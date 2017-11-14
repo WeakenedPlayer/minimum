@@ -9,14 +9,18 @@ export abstract class ListView extends View {
         super();
     }
     
-    protected add( choice: string, action: () => void ) {
+    protected add( choice: string, action: () => void ): void {
         if( choice && !this.actions[ choice ] ) {
             this.choices.push( choice );
         }
         this.actions[ choice ] = action;
     }
     
-    protected clear() {
+    protected addSeparator(): void {
+        this.choices.push( new inquirer.Separator() );
+    }
+    
+    protected clear(): void {
         this.choices = [];
         this.actions = {};
     }
@@ -32,6 +36,9 @@ export abstract class ListView extends View {
     }
     
     protected showPrompt( param?: any ): Promise<string> {
+        if( param && param.message ) {
+            console.log( param.message );
+        }
         return inquirer.prompt( {
             type: 'list',
             name: 'chosen',
