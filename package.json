@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@weakenedplayer/screenshot-bot": "0.1.0-beta.9",
+    "@weakenedplayer/screenshot-bot": "^0.1.0",
     "chalk": "^2.1.0",
     "clear": "0.0.1",
     "clui": "^0.3.6",

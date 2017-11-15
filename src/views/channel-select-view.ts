@@ -18,11 +18,14 @@ export class ChannelSelectView extends ListView {
     
     private addChannelCommand( channel: Channel, guild: Guild ) {
         this.add( channel.id + ': ' + channel.name, () => {
+            // TODO: もう少しまとめる
             this.pref.client.channel.id   = channel.id;
             this.pref.client.channel.name = channel.name;
             this.pref.client.channel.guildId = channel.guildId;
             this.pref.client.guild.id = guild.id;
             this.pref.client.guild.name = guild.name;
+            
+            this.controller.setChannelId( channel.id );
             this.host.next( 'connected' );
         } );
     }

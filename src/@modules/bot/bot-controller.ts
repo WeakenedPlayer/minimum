@@ -48,6 +48,8 @@ export class BotController {
         this.subscription = this.bot.post$.subscribe();
         this.bot.filter = this.pref.directory.src;
         this.bot.option = new JpegConverterOption( this.pref.directory.tmp );
+        
+        this.bot.post$.subscribe();
     }
     
     private update() {
@@ -66,11 +68,14 @@ export class BotController {
     
     start(): void {
         this.update();
-        this.bot.post$.subscribe();
         this.bot.startPosting();
     }
     
     stop(): void {
         this.bot.stopPostiong();
+    }
+    
+    setChannelId( channelId: string ) {
+        this.bot.channelId = channelId;
     }
 }
