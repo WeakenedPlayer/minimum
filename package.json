@@ -6,7 +6,8 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "nexe": "node_modules\\.bin\\nexe dist\\main.bundle.js --silent --ico resource\\icon.ico -o NS-ScreenshotBot.exe",
+    "nexe": "node_modules\\.bin\\nexe dist\\main.bundle.js --build -o test.exe",
+    "release": "node_modules\\.bin\\nexe dist\\main.bundle.js --build --ico resource\\icon.ico -o NS-ScreenshotBot.exe",
     "test": "npm run build && node dist"
   },
   "keywords": [],
