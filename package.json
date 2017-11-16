@@ -5,7 +5,7 @@
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "webpack --config webpack.prod.js",
     "test": "npm run build && node dist"
   },
   "keywords": [],
@@ -22,6 +22,13 @@
   "author": "WeakenedPlayer",
   "license": "MIT",
   "devDependencies": {
-    "nexe": "^2.0.0-rc.11"
+    "clean-webpack-plugin": "^0.1.17",
+    "imports-loader": "^0.7.1",
+    "nexe": "^2.0.0-rc.20",
+    "node-loader": "^0.6.0",
+    "ts-loader": "^3.1.1",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1",
+    "webpack-merge": "^4.1.1"
   }
 }

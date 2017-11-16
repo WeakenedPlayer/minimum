@@ -8,6 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "noImplicitUseStrict": true,
     "lib": [ "dom", "es6" ],
     "typeRoots": [ "node_modules/@types" ]
   },
