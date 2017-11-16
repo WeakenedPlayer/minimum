@@ -17,7 +17,7 @@ export class TokenInputView extends InputView {
     }
 
     public show( param?: any ): Promise<void> {
-        // clear();
+        clear();
         console.log( 'TokenInputView/show')
         return this.showPrompt()
         .then( (input) => {
@@ -41,7 +41,7 @@ export class SourceInputView extends InputView {
     }
     
     public show( param?: any ): Promise<void> {
-        // clear();
+        clear();
         return this.showPrompt()
         .then( (input) => {
             if( input ) {
@@ -64,7 +64,7 @@ export class TemporaryInputView extends InputView {
     }
     
     public show( param?: any ): Promise<void> {
-        // clear();
+        clear();
         return this.showPrompt()
         .then( (input) => {
             if( input ) {

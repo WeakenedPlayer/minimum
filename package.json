@@ -6,6 +6,7 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
+    "deploy": "node_modules\\.bin\\nexe dist\\main.bundle.js",
     "test": "npm run build && node dist"
   },
   "keywords": [],
@@ -16,7 +17,9 @@
     "clui": "^0.3.6",
     "figlet": "^1.2.0",
     "inquirer": "^3.3.0",
+    "opencollective": "^1.0.3",
     "preferences": "^0.2.1",
+    "readdirp": "^2.1.0",
     "rxjs": "^5.4.3"
   },
   "author": "WeakenedPlayer",
@@ -26,6 +29,7 @@
     "imports-loader": "^0.7.1",
     "nexe": "^2.0.0-rc.20",
     "node-loader": "^0.6.0",
+    "octal-number-loader": "^0.1.4",
     "ts-loader": "^3.1.1",
     "typescript": "^2.6.1",
     "webpack": "^3.8.1",

@@ -51,7 +51,7 @@ export class ChannelSelectView extends ListView {
 
     public show( param?: any ): Promise<void> {
         if( param && param.guild ) {
-         //   clear();
+            clear();
             
             return this.createMenu( param.guild )
             .then( () => {

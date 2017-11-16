@@ -34,7 +34,7 @@ export class HomeView extends ListView {
     public onInit(): void {}
     
     public show( param?: any ): Promise<void> {
-        ///clear();
+        clear();
         return this.showAndExecute( param )
         .catch( ( err ) => {
             console.log('------------------------------------------------------------------------------------\n');

@@ -34,7 +34,7 @@ export class GuildSelectView extends ListView {
     onInit() {}
 
     public show( param?: any ): Promise<void> {
-       // clear();
+       clear();
         return this.createMenu()
         .then( () => {
             return this.showAndExecute( param );

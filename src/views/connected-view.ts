@@ -55,7 +55,7 @@ export class ConnectedView extends ListView {
     
     public show( param?: any): Promise<void> {
         let command: string;
-       // clear();
+       clear();
         return this.showPrompt( param )
         .then( result => {
             command = result;
