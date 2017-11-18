@@ -1,4 +1,4 @@
-import { ScreenshotBot, JpegConverterOption, ClientState } from '@weakenedplayer/screenshot-bot';
+import { ScreenshotBot, JpegConverterOption, ClientState, JpegOutputOption } from '@weakenedplayer/screenshot-bot';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { OAuth2App, Channel, Guild } from './models';
 
@@ -55,7 +55,7 @@ export class BotController {
     private update() {
         this.bot.channelId = this.pref.client.channel.id;
         this.bot.filter = this.pref.directory.src;
-        this.bot.option = new JpegConverterOption( this.pref.directory.tmp );
+        this.bot.option = new JpegConverterOption( this.pref.directory.tmp, new JpegOutputOption(), 5, 500 ); // 適当にリトライ設定
     }
     
     login(): Promise<string> {

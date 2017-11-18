@@ -4,6 +4,8 @@ import { SourceInputView, TemporaryInputView, TokenInputView, HomeView, Connecte
 
 let host = new ViewHost();
 let pref = createPreference( 'com.discord-bot.weakenedplayer' );
+
+// TODO: ScreenshotBotのパラメータも変更できるようにする。(ファイル追加の検知、Jpeg変換のリトライ条件がマシンによって差が出るため)
 let controller = new BotController( pref );
 
 host.add( 'home', new HomeView( controller, pref ) );

@@ -1,6 +1,6 @@
 {
   "name": "ns-screenshot-bot",
-  "version": "0.0.1",
+  "version": "0.0.2-beta.0",
   "description": "",
   "main": "dist/main.bundle",
   "types": "dist/dist/index.d.ts",
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@weakenedplayer/screenshot-bot": "^0.1.1-beta.1",
+    "@weakenedplayer/screenshot-bot": "^0.1.1-beta.2",
     "chalk": "^2.1.0",
     "clear": "0.0.1",
     "clui": "^0.3.6",
