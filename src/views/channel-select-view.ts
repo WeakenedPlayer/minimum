@@ -1,7 +1,10 @@
-import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPreference, Channel, Guild } from '../@modules';
+import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPreference, Channel, Guild, Item, ConstantItem, separator } from '../@modules';
 import { Subscription, Subject, Observable } from 'rxjs';
 
 export class ChannelSelectView extends ListView {
+    private channels: Channel[] = [];
+    private items: Item[] = [];
+
     constructor( private controller: BotController, private pref: BotPreference  ) {
         super();
     }
@@ -17,7 +20,7 @@ export class ChannelSelectView extends ListView {
     }
     
     private addChannelCommand( channel: Channel, guild: Guild ) {
-        this.add( channel.id + ': ' + channel.name, () => {
+        this.items.push( new ConstantItem( channel.id + ': ' + channel.name, () => {
             // TODO: もう少しまとめる
             this.pref.client.channel.id   = channel.id;
             this.pref.client.channel.name = channel.name;
@@ -27,14 +30,15 @@ export class ChannelSelectView extends ListView {
             
             this.controller.setChannelId( channel.id );
             this.host.next( 'connected' );
-        } );
+        } ) );
     }
     
     private createMenu( guild: Guild ): Promise<void> {
-        this.clear();
-        this.addSeparator();
-        this.add( 'Back', () => { this.host.back() } );
-        this.addSeparator();
+        this.items = [];
+        this.items.push( separator );
+        this.items.push( new ConstantItem( 'Back', () => { this.host.back() } ) );
+        this.items.push( separator );
+
         return this.controller.channel$.take(1).toPromise()
         .then( channels => {
             for( let id in channels ) {
@@ -46,8 +50,7 @@ export class ChannelSelectView extends ListView {
         } );
     }
         
-    onInit() {
-    }
+    onInit() {}
 
     public show( param?: any ): Promise<void> {
         if( param && param.guild ) {

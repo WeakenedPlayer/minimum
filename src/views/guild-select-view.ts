@@ -1,7 +1,9 @@
-import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPreference, Guild } from '../@modules';
+import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPreference, Guild, Item, ConstantItem, separator } from '../@modules';
 import { Subscription, Subject, Observable } from 'rxjs';
 
 export class GuildSelectView extends ListView {
+    private guilds: Guild[] = [];
+    private items: Item[] = [];
     
     constructor( private controller: BotController, private pref: BotPreference  ) {
         super();
@@ -12,21 +14,19 @@ export class GuildSelectView extends ListView {
     }
 
     private addGuildCommand( guild: Guild ): void {
-        this.add( guild.id + ': ' + guild.name, () => {
-            this.host.next( 'channel-select', { guild: guild } );
-        } );
     }
     
     private createMenu(): Promise<void> {
-        this.clear();
-        this.addSeparator();
-        this.add( 'Back', () => { this.host.next( 'connected' ) } );
-        this.addSeparator();
+        this.items = [];
+        this.items.push( separator );
+        this.items.push( new ConstantItem( 'Back', () => { this.host.next( 'connected' ) } ) );
+        this.items.push( separator );
         
         return this.controller.guild$.take(1).toPromise()
         .then( guilds => {
             for( let id in guilds ) {
-                this.addGuildCommand( guilds[ id ] );
+                let guild = guilds[ id ];
+                this.items.push( new ConstantItem( guild.id + ': ' + guild.name, () => { this.host.next( 'channel-select', { guild: guild } ) } ) );
             }
         } );
     }
@@ -34,11 +34,11 @@ export class GuildSelectView extends ListView {
     onInit() {}
 
     public show( param?: any ): Promise<void> {
-       clear();
+        clear();
+        this.buildList( this.items );
         return this.createMenu()
         .then( () => {
             return this.showAndExecute( param );
         } );
     }
 }
-

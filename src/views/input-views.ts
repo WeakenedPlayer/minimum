@@ -9,16 +9,15 @@ export class TokenInputView extends InputView {
         let token = this.pref.client.token;
         let message: string;
         if( token ) {
-            message = 'Input token\n  Current value: ' + token + '\n  New value    :'; 
+            message = 'Token\n  Current value: ' + token + '\n  New value    :'; 
         } else {
-            message = 'Input token:'; 
+            message = 'Token: '; 
         }
         return message;
     }
 
     public show( param?: any ): Promise<void> {
         clear();
-        console.log( 'TokenInputView/show')
         return this.showPrompt()
         .then( (input) => {
             if( input ) {
@@ -37,7 +36,14 @@ export class SourceInputView extends InputView {
     }
     
     protected message(): string {
-        return 'Input Source Directory: \n';
+        let dir = this.pref.directory.src;
+        let message: string;
+        if( dir ) {
+            message = 'Source Directory... \n  Current value: ' + dir + '\n  New value    :'; 
+        } else {
+            message = 'Source Directory: ';
+        }
+        return message;
     }
     
     public show( param?: any ): Promise<void> {
@@ -60,7 +66,14 @@ export class TemporaryInputView extends InputView {
     }
     
     protected message(): string {
-        return 'Input Temporary Directory: ';
+        let dir = this.pref.directory.tmp;
+        let message: string;
+        if( dir ) {
+            message = 'Temporary Directory... \n  Current value: ' + dir + '\n  New value    :'; 
+        } else {
+            message = 'Temporary Directory: ';
+        }
+        return message;
     }
     
     public show( param?: any ): Promise<void> {

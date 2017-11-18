@@ -1,36 +1,28 @@
-import { prompt, inquirer, clear, chalk, clui, ListView, BotController } from '../@modules';
+import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPreference, Item, VariableItem, ConstantItem, separator } from '../@modules';
 import { Subscription, Subject, Observable } from 'rxjs';
 
 // 不具合事例…画面が重なることが問題。→画面の遷移を禁止できれば良い
 
+
+
 export class ConnectedView extends ListView {
     private spinner = new clui.Spinner( 'Reconnecting...', ['◜','◠','◝','◞','◡','◟'] );
     private isActive: boolean = false;
+    private items: Item[] = [];
     
-    constructor( private controller: BotController ) {
+    constructor( private controller: BotController, private pref: BotPreference ) {
         super();
-        this.add( 'Activate/Deactivate broadcast...', () => { this.toggle() } );
-        this.add( 'Select channel...', () => { this.host.next( 'guild-select' ) } );
-        this.addSeparator();
-        this.add( 'Logout', () => { this.logout() } );
-        this.addSeparator();
-        this.add( 'Quit',() => { this.quit() } );
     }
     
     private toggle(): void {
-        let message = '';
-        
         if( this.isActive ) {
-            message = 'Inactive';
             this.controller.stop();
             this.isActive = false;
         } else {
-            message = 'Active';
             this.controller.start();
             this.isActive = true;
         }
-        
-        this.host.reopen( { message: message } );
+        this.host.reopen();
     }
     
     private quit(): void {
@@ -51,11 +43,34 @@ export class ConnectedView extends ListView {
         return 'Online menu:';
     }
 
-    onInit() {}
+    onInit() {
+        this.items.push( new VariableItem( ()=>{ 
+            if( this.isActive ) {
+                return chalk.blue( 'Activate Broadcast' );
+            } else {
+                return chalk.red( 'Deactivate Broadcast' );
+            }
+        }, () => { this.toggle() } ) );
+        
+        this.items.push( new VariableItem( () => {
+            let guild = this.pref.client.guild;
+            let channel = this.pref.client.channel;
+            if( guild && guild.name && channel && channel.name ) {
+                return 'Select channel... (' + this.pref.client.guild.name + '/' + this.pref.client.channel.name + ')';
+            } else {
+                return 'Select channel...';
+            }
+        }, () => { this.host.next( 'guild-select' ) } ) );
+
+        this.items.push( separator );
+        this.items.push( new ConstantItem( 'Logout', () => { this.logout() } ) );
+        this.items.push( separator );
+        this.items.push( new ConstantItem( 'Quit', () => { this.quit() } ) );
+    }
     
     public show( param?: any): Promise<void> {
         let command: string;
-       clear();
+        clear();
         return this.showPrompt( param )
         .then( result => {
             command = result;

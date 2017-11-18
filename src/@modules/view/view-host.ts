@@ -23,7 +23,6 @@ export class ViewHost {
             if( view ) {
                 this.currentRef = ref;
                 return Observable.fromPromise( view.show( ref.param ).then( () => {
-                    //console.log( '############################## View Host next ##############################')
                     this.lastRef = ref; 
                 } ) );
             }
@@ -42,7 +41,6 @@ export class ViewHost {
     }
 
     next( id: string, param?: any ): void {
-        //console.log( 'next is called: ' + id + '##########################' );
         this.refSubject.next( { id: id, param: param } );
     }
 
