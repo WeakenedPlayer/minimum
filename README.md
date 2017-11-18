@@ -19,7 +19,7 @@ Discord.js を使って、テキストチャネルに画像を投稿するDiscor
 6. *Deactivate Broadcast* でスクリーンショットの投稿を停止する。
 7. *Quit* で終了する。
 
-### 設定の保存について
+### 設定の保存
 このソフトは、正常終了すると設定が保存されます。設定は以下に保存されます。
 
 ``` sh
@@ -37,6 +37,7 @@ C:\users\<ユーザ名>\.config
 * Temporary directory: JPEGに変換したスクリーンショットを保存するディレクトリを指定する。
 * Discord token: 接続先のDiscord Appの token(トークン文字列)を指定する。
 * Quit: 終了する。
+![オフライン画面](https://github.com/WeakenedPlayer/minimum/raw/master/images/offline.png)
 
 ### オンライン画面
 * Activate/Deactivate Broadcast: スクリーンショットの投稿を有効化する/無効化する(交互に切り替わる)。
