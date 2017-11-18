@@ -22,9 +22,9 @@ Discord.js を使って、テキストチャネルに画像を投稿するDiscor
 ### 設定の保存について
 このソフトは、正常終了すると設定が保存されます。設定は以下に保存されます。
 
-```sh
-``` C:\users\<ユーザ名>\.config
-
+``` sh
+C:\users\<ユーザ名>\.config
+```
 
 ### 強制終了
 エラー処理をしっかり作りこんでいないため、色々と問題が起こる可能性があります。
@@ -61,22 +61,24 @@ node_modulesに含まれるモジュールには、コンソールで特殊な�
 #### 修正前
 
 ```js
-```module.exports = function(clear) {
-```    if (clear !== false) {
-```        process.stdout.write('\033[2J');
-```    }
-```    process.stdout.write('\033[0f');
-```};
+module.exports = function(clear) {
+    if (clear !== false) {
+        process.stdout.write('\033[2J');
+    }
+    process.stdout.write('\033[0f');
+};
+```
 
 #### 修正前
 
 ```js
-```module.exports = function(clear) {
-```    if (clear !== false) {
-```        process.stdout.write('\x1b[2J');
-```    }
-```    process.stdout.write('\x1b[0f');
-```};
+module.exports = function(clear) {
+    if (clear !== false) {
+        process.stdout.write('\x1b[2J');
+    }
+    process.stdout.write('\x1b[0f');
+};
+```
 
 ## Licence
 [MIT](https://github.com/tcnksm/tool/blob/master/LICENCE)
