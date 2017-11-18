@@ -9,5 +9,5 @@ export abstract class View {
         this.host = host;
     }
     public abstract onInit(): void;
-    public abstract show( param?: any ): Promise<void>;
+    public abstract show( param?: string ): Promise<void>;
 }

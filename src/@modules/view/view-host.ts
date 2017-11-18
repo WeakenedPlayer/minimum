@@ -3,7 +3,7 @@ import { View } from './view';
 
 interface ViewRef {
     id: string;
-    param?: any;
+    param?: string;
 }
 
 export class ViewHost {
@@ -23,7 +23,6 @@ export class ViewHost {
             if( view ) {
                 this.currentRef = ref;
                 return Observable.fromPromise( view.show( ref.param ).then( () => {
-                    //console.log( '############################## View Host next ##############################')
                     this.lastRef = ref; 
                 } ) );
             }
@@ -41,16 +40,15 @@ export class ViewHost {
         }
     }
 
-    next( id: string, param?: any ): void {
-        //console.log( 'next is called: ' + id + '##########################' );
+    next( id: string, param?: string ): void {
         this.refSubject.next( { id: id, param: param } );
     }
 
-    reopen( param?: any ): void {
+    reopen( param?: string ): void {
         this.next( this.currentRef.id, param );
     }
     
-    back( param?: any ): void {
+    back( param?: string ): void {
         this.next( this.lastRef.id, param );
     }
     

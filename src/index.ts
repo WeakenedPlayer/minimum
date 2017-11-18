@@ -1,14 +1,14 @@
+// https://github.com/nodejs/node/pull/15685
 import { Observable } from 'rxjs';
 import { ViewHost, BotController, createPreference } from './@modules';
-
 import { SourceInputView, TemporaryInputView, TokenInputView, HomeView, ConnectedView, GuildSelectView, ChannelSelectView } from './views';
 
 let host = new ViewHost();
 let pref = createPreference( 'com.discord-bot.weakenedplayer' );
 let controller = new BotController( pref );
 
-host.add( 'home', new HomeView( controller ) );
-host.add( 'connected', new ConnectedView( controller ) );
+host.add( 'home', new HomeView( controller, pref ) );
+host.add( 'connected', new ConnectedView( controller, pref ) );
 host.add( 'source-input', new SourceInputView( pref ) );
 host.add( 'temporary-input', new TemporaryInputView( pref ) );
 host.add( 'token-input', new TokenInputView( pref ) );

@@ -6,6 +6,7 @@
     "declaration": true,
     "outDir": "./dist",
     "emitDecoratorMetadata": true,
+    "noImplicitUseStrict": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "lib": [ "dom", "es6" ],
