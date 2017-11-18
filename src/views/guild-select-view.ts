@@ -14,6 +14,11 @@ export class GuildSelectView extends ListView {
     }
 
     private addGuildCommand( guild: Guild ): void {
+        this.items.push( new ConstantItem( guild.id + ': ' + guild.name, () => {
+            this.pref.client.guild.tmpId = guild.id;
+            this.pref.client.guild.tmpName = guild.name;
+            this.host.next( 'channel-select' );
+        } ) );
     }
     
     private createMenu(): Promise<void> {
@@ -26,8 +31,9 @@ export class GuildSelectView extends ListView {
         .then( guilds => {
             for( let id in guilds ) {
                 let guild = guilds[ id ];
-                this.items.push( new ConstantItem( guild.id + ': ' + guild.name, () => { this.host.next( 'channel-select', { guild: guild } ) } ) );
+                this.addGuildCommand( guild );;
             }
+            this.buildList( this.items );
         } );
     }
         
@@ -35,7 +41,6 @@ export class GuildSelectView extends ListView {
 
     public show( param?: any ): Promise<void> {
         clear();
-        this.buildList( this.items );
         return this.createMenu()
         .then( () => {
             return this.showAndExecute( param );

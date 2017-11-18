@@ -3,10 +3,16 @@ var Preferences = require("preferences");
 
 export interface BotPreference {
     client: {
-        token: string;
-        guild: { 
+        // 不使用
+        app: {
+            token: string;
+            name: string;
+        },
+        guild: {
             id: string;
             name: string;
+            tmpId: string;      // TENTATIVE: Guild -> Channelの順に設定するので、一時置き (良くないやり方)
+            tmpName: string;
         };
         channel: {
             id: string;
@@ -22,10 +28,15 @@ export interface BotPreference {
 
 const initValue = {
     client: {
-        token: '',
+        app: {
+            token: '',
+            name: '',
+        },
         guild: {
             id: '',
             name: '',
+            tmpId: '',
+            tmpName: '',
         },
         channel: {
             id: '',
@@ -34,8 +45,8 @@ const initValue = {
         }
     },
     directory: {
-        src: 'screen-shot directory',
-        tmp: 'temporary directory'
+        src: '',
+        tmp: ''
     }
 };
 

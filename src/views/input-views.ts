@@ -5,8 +5,8 @@ export class TokenInputView extends InputView {
         super();
     }
     
-    protected message(): string {
-        let token = this.pref.client.token;
+    protected message( param?: string ): string {
+        let token = this.pref.client.app.token;
         let message: string;
         if( token ) {
             message = 'Token\n  Current value: ' + token + '\n  New value    :'; 
@@ -20,8 +20,12 @@ export class TokenInputView extends InputView {
         clear();
         return this.showPrompt()
         .then( (input) => {
+            // 本当はUI側にロジックを入れるのは良くないが、ここだけなので許容
             if( input ) {
-                this.pref.client.token = input;            
+                if( input !== this.pref.client.app.token ) {
+                    this.pref.client.app.name = '';
+                }
+                this.pref.client.app.token = input;            
             }
             this.host.back();
         } );
@@ -35,7 +39,7 @@ export class SourceInputView extends InputView {
         super();
     }
     
-    protected message(): string {
+    protected message( param?: string ): string {
         let dir = this.pref.directory.src;
         let message: string;
         if( dir ) {
@@ -65,7 +69,7 @@ export class TemporaryInputView extends InputView {
         super();
     }
     
-    protected message(): string {
+    protected message( param?: string ): string {
         let dir = this.pref.directory.tmp;
         let message: string;
         if( dir ) {

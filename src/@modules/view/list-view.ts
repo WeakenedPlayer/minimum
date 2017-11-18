@@ -8,7 +8,7 @@ export abstract class ListView extends View {
     private commandMap: { [ name:string ]: () => void } = {};
     
     constructor() { super(); }
-    protected abstract message(): string;
+    protected abstract message( param?: any ): string;
     
     public buildList( items: Item[] ): void {
         this.commandMap = {};
@@ -21,19 +21,19 @@ export abstract class ListView extends View {
         } );
     }
     
-    protected showAndExecute( param?: any ): Promise<void> {
+    protected showAndExecute( param?: string ): Promise<void> {
         return this.showPrompt( param )
         .then( ( command ) => {
             this.execute( command );
         } );
     }
     
-    protected showPrompt( param?: any ): Promise<string> {
+    protected showPrompt( param?: string ): Promise<string> {
         return inquirer.prompt( {
             type: 'list',
             name: 'chosen',
             choices: this.nameList,
-            message: this.message(),
+            message: this.message( param ),
             pageSize: Math.min( this.nameList.length, ListView.MAX_PAGE_SIZE )
         } ).then( answer => {
             return answer.chosen;

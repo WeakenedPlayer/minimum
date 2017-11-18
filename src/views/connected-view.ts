@@ -1,10 +1,6 @@
 import { prompt, inquirer, clear, chalk, clui, ListView, BotController, BotPreference, Item, VariableItem, ConstantItem, separator } from '../@modules';
 import { Subscription, Subject, Observable } from 'rxjs';
 
-// 不具合事例…画面が重なることが問題。→画面の遷移を禁止できれば良い
-
-
-
 export class ConnectedView extends ListView {
     private spinner = new clui.Spinner( 'Reconnecting...', ['◜','◠','◝','◞','◡','◟'] );
     private isActive: boolean = false;
@@ -13,6 +9,8 @@ export class ConnectedView extends ListView {
     constructor( private controller: BotController, private pref: BotPreference ) {
         super();
     }
+    
+    public onInit(){}
     
     private toggle(): void {
         if( this.isActive ) {
@@ -36,22 +34,26 @@ export class ConnectedView extends ListView {
         this.controller.logout()
         .then( () => {
             this.host.next( 'home' );
-        } );      
+        }, (err) => {
+            this.host.reopen();
+        } );
     }
 
-    protected message(): string {
-        return 'Online menu:';
+    protected message( param?: string): string {
+        return chalk.bgBlue( '[Online/' + ( this.isActive ? 'Active' : 'Inactive' )+'] ' + ( param ? param : '' ) );
     }
 
-    onInit() {
+    private createMenu() {
+        this.items = [];
+        this.items.push( separator );
         this.items.push( new VariableItem( ()=>{ 
             if( this.isActive ) {
-                return chalk.blue( 'Activate Broadcast' );
+                return 'Deactivate Broadcast';
             } else {
-                return chalk.red( 'Deactivate Broadcast' );
+                return 'Activate Broadcast';
             }
         }, () => { this.toggle() } ) );
-        
+        this.items.push( separator );
         this.items.push( new VariableItem( () => {
             let guild = this.pref.client.guild;
             let channel = this.pref.client.channel;
@@ -61,7 +63,6 @@ export class ConnectedView extends ListView {
                 return 'Select channel...';
             }
         }, () => { this.host.next( 'guild-select' ) } ) );
-
         this.items.push( separator );
         this.items.push( new ConstantItem( 'Logout', () => { this.logout() } ) );
         this.items.push( separator );
@@ -71,6 +72,8 @@ export class ConnectedView extends ListView {
     public show( param?: any): Promise<void> {
         let command: string;
         clear();
+        this.createMenu();
+        this.buildList( this.items );
         return this.showPrompt( param )
         .then( result => {
             command = result;
@@ -78,9 +81,9 @@ export class ConnectedView extends ListView {
         } )
         .then( state => {
             if( state.busy ) {
-                this.host.reopen( { message: 'Client is busy...Try again.' } );
+                this.host.reopen( 'Client is busy...Try again.' );
             } else if( !state.connected ) {
-                this.host.next( 'home', { message: 'Disconnected...' })
+                this.host.next( 'home', 'Disconnected...' )
             } else {
                 this.execute( command );
             }

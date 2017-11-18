@@ -6,10 +6,10 @@ export abstract class InputView extends View {
         super();
     }
     
-    protected abstract message(): string;
+    protected abstract message( param?: string ): string;
     
-    protected showPrompt( param?: any ): Promise<string> {
-        let message = this.message();
+    protected showPrompt( param?: string ): Promise<string> {
+        let message = this.message( param );
         return prompt( {
             type: 'input',
             name: 'input',

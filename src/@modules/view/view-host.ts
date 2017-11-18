@@ -3,7 +3,7 @@ import { View } from './view';
 
 interface ViewRef {
     id: string;
-    param?: any;
+    param?: string;
 }
 
 export class ViewHost {
@@ -40,15 +40,15 @@ export class ViewHost {
         }
     }
 
-    next( id: string, param?: any ): void {
+    next( id: string, param?: string ): void {
         this.refSubject.next( { id: id, param: param } );
     }
 
-    reopen( param?: any ): void {
+    reopen( param?: string ): void {
         this.next( this.currentRef.id, param );
     }
     
-    back( param?: any ): void {
+    back( param?: string ): void {
         this.next( this.lastRef.id, param );
     }
     

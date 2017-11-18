@@ -16,7 +16,7 @@ export class BotController {
     get channel$() { return this.channelObservable; }
     get guild$() { return this.guildObservable; }
     get state$() { return this.stateObservable; } 
-
+    
     private subscription: Subscription = new Subscription();
     
     constructor( private pref: BotPreference ) {
@@ -59,7 +59,12 @@ export class BotController {
     }
     
     login(): Promise<string> {
-        return this.bot.login( this.pref.client.token );
+        let token = this.pref.client.app.token;
+        if( token ) {
+            return this.bot.login( this.pref.client.app.token );
+        } else {
+            return Promise.reject( 'Token is empty. ');
+        }
     }
     
     logout(): Promise<void> {
