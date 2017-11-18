@@ -5,7 +5,7 @@ Discord.js を使って、テキストチャネルに画像を投稿するDiscor
 ### 準備
 「[DiscordのBotを作る](https://weakenedfuntimeblog.wordpress.com/2017/07/23/discord%e3%81%aebot%e3%82%92%e3%81%a4%e3%81%8f%e3%82%8b/)」を参考に、DiscordのBotを作成します。(BotとはDiscord上での発言や受け答えをするための、Discord上のユーザのようなものです)
 
-作成したBotは、Discordのチャネル(チャットやボイスチャットをするための「回線」のようなもの)に登録することで、スクリーンショットを投稿できるようになります。なお、チャネルへの登録はチャネルのオーナーにしかできないので、「クライアントID」をオーナーに伝えて、登録してもらってください。
+作成したBotは、Discordのサーバに登録することで、スクリーンショットを投稿できるようになります。Botのサーバへの登録は、サーバのオーナーにしかできないので、「クライアントID」をオーナーに伝えて、登録してもらってください。
 
 1. Botを作成・設定する
 2. Botをチャネルに登録する
@@ -25,10 +25,22 @@ Discord.js を使って、テキストチャネルに画像を投稿するDiscor
 ``` sh
 C:\users\<ユーザ名>\.config
 ```
-
 ### 強制終了
 エラー処理をしっかり作りこんでいないため、色々と問題が起こる可能性があります。
 その場合は、コンソールで*ctrl + c*を入力すれば強制終了できます。
+
+### 注意
+#### Botが勝手に登録される
+Botは元々、不特定多数のひとに自動的に情報を発信したり、会話をしたりするためのものなので、Botが知らないサーバに勝手に登録されることは起こり得ます。
+まずは、クライアントID(サーバに登録してもらうときに必要)を知られないことが第一です。
+
+万一、知らない人のサーバに勝手に登録されてしまったとしても、スクリーンショットの投稿先にしなければ大丈夫です。
+(今後、サーバからの脱退機能を追加予定です)
+
+#### クライアントIDとトークンの管理
+* クライアントID: サーバのオーナーに伝える情報…不特定多数の人に伝えないこと。
+* トークン: 絶対に知られてはいけない情報…Botを乗っ取られて、なりすましされるかもしれません。定期的に[DiscordのMy Apps](https://discordapp.com/developers/applications/me/)から再設定すべきです。
+
 
 ## 画面の説明
 ### オフライン画面
@@ -37,6 +49,7 @@ C:\users\<ユーザ名>\.config
 * Temporary directory: JPEGに変換したスクリーンショットを保存するディレクトリを指定する。
 * Discord token: 接続先のDiscord Appの token(トークン文字列)を指定する。
 * Quit: 終了する。
+
 ![オフライン画面](https://github.com/WeakenedPlayer/minimum/raw/master/images/offline.png)
 
 ### オンライン画面
@@ -45,19 +58,25 @@ C:\users\<ユーザ名>\.config
 * Logout: ログアウト(Discordとの接続を解除)する。
 * Quit: 終了する。
 
+![オンライン画面](https://github.com/WeakenedPlayer/minimum/raw/master/images/online.png)
+
 
 ## ビルド
-* Visual Studio 2010(?) 以上をインストールする
-* python 2.x 系をインストールし、PATHを設定する
-* npm install で必要なモジュールを入手する
-* node_modules 内のコードを一部修正する: "Acorn error: Octal literal in strict mode" を防ぐために必要
-* npm run release: nodeをダウンロードしてビルドするので時間がかかる
+ビルドが少しより便利にしたい方がいたら、以下を参考にしてください。
+
+* Visual Studio 2010(?) 以上をインストールする。
+* python 2.x 系をインストールし、PATHを設定する。(3.x系だとNG)
+* npm install で必要なモジュールを入手する。
+* node_modules 内のコードを一部修正する: "Acorn error: Octal literal in strict mode" を防ぐために必要。
+* npm run release: nodeをダウンロードしてビルドするので時間がかかる。
 
 ### コード修正
-node_modulesに含まれるモジュールには、コンソールで特殊な操作を行うための制御文字を8進数で表現している場合がある。
-8進数は「strict mode」で禁止されているので、nexeで「Acorn error: Octal literal in strict mode」というエラーが発生して、ビルドできなくなってしまう。
+node_modulesに含まれるモジュールには、コンソールで特殊な操作を行うための制御文字を8進数で表現している場合があります。
+8進数は「strict mode」で禁止されているので、nexeで「Acorn error: Octal literal in strict mode」というエラーが発生して、ビルドできなくなってしまいます。
 
-これを防ぐために、テキストエディタ等(できればEclipse)で、文字列リテラルに含まれる8進数を検索し、16進数に置き換える。今のところ、"\033" = "\x1b" = 27 が数か所あるだけだったので手修正する。(今後ツールが現れたら使いたい)
+これを防ぐために、テキストエディタ等(できればEclipse)で、文字列リテラルに含まれる8進数を検索し、16進数に置き換えます。
+
+今のところ、"\033" = "\x1b" = 27 が数か所あるだけだったので手修正しました。(今後ツールが現れたら使いたいです)
 
 #### 修正前
 
@@ -80,6 +99,7 @@ module.exports = function(clear) {
     process.stdout.write('\x1b[0f');
 };
 ```
+
 
 ## Licence
 [MIT](https://github.com/tcnksm/tool/blob/master/LICENCE)

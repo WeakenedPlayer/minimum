@@ -1,12 +1,12 @@
 {
   "name": "ns-screenshot-bot",
-  "version": "0.0.1-beta.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/main.bundle",
   "types": "dist/dist/index.d.ts",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "release": "npm run build && node_modules\\.bin\\nexe dist\\main.bundle.js --build --ico resource\\icon.ico -o NS-ScreenshotBot.exe",
+    "release": "npm run build && node_modules\\.bin\\nexe dist\\main.bundle.js --build --ico resource\\icon.ico -o release\\NS-ScreenshotBot.exe --rc { FileDescription: 'Discord Bot to post screenshot images.' CompanyName: 'https://github.com/WeakenedPlayer', ProductName: 'NS-ScreenshotBot', OriginalFilename: 'NS-ScreenshotBot.exe' }",
     "test": "tsc && node dist\\index.js"
   },
   "keywords": [],
