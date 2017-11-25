@@ -1,6 +1,8 @@
 # ScreenshotBot
 Discord.js を使って、テキストチャネルに画像を投稿するDiscord用のBotです。NSとありますが、Nanite Systemsとは無関係なので、DBGに怒られたら名前を変えます…(もっとも、使う人はそんなにいないだろうけど)
 
+[![](http://img.youtube.com/vi/IEAlmEk4Fds/0.jpg)](https://www.youtube.com/watch?v=IEAlmEk4Fds)
+
 ## 使い方
 ### 準備
 「[DiscordのBotを作る](https://weakenedfuntimeblog.wordpress.com/2017/07/23/discord%e3%81%aebot%e3%82%92%e3%81%a4%e3%81%8f%e3%82%8b/)」を参考に、DiscordのBotを作成します。(BotとはDiscord上での発言や受け答えをするための、Discord上のユーザのようなものです)
@@ -111,7 +113,12 @@ module.exports = function(clear) {
 	* Explorerのプロパティで表示される情報を、node.jsから変更したい。(nexeのrcオプションがうまく機能していない?)
 * エラー処理
 	* どんなエラーがあるか情報を集め、処理を追加する。
-
+* ビルドの改善
+	* .node ファイルとdll を自動で収集できるようにする。
+	* .node ファイルはできればバンドルできるようにする。
+* 操作の改善
+	* BotとのDMでリモート操作できるようにする。
+	* 複数の設定を簡単に切り替えられるようにする。
 
 ## Licence
 [MIT](https://github.com/tcnksm/tool/blob/master/LICENCE)

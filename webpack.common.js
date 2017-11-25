@@ -1,7 +1,7 @@
 // https://webpack.js.org/guides/production/#setup
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const NodeLoader = require('node-loader');
+const nodeAddonLoader = require('node-addon-loader');
 
 module.exports = {
 	entry: './src/index.ts',
@@ -9,7 +9,8 @@ module.exports = {
     resolve: {
         // import, require で指定したモジュールを探すときの拡張子
         // 拡張子が不足していると見つからない
-        extensions:[ '.ts', '.tsx', '.webpack.js', '.js', '.jsx', '.json', '.node' ]
+        extensions:[ '.ts', '.tsx', '.webpack.js', '.js', '.jsx', '.json', '.node' ],
+        
     },
 	module: {
 		loaders: [ { 
@@ -20,8 +21,12 @@ module.exports = {
             	configFile: 'tsconfig.json'
             }
 		}, { 
+			// Use node-addon-loader instead of node-loader which embed absolute path to main.bundle.js
 			test: /\.node$/, 
-			loader: 'node-loader'
+			loader: 'node-addon-loader',
+	        options: {
+	            basePath: path.join( path.resolve(__dirname), 'dist' ),
+	        }
 		}, {
 			// ERROR in ./node_modules/rx-lite-aggregates/rx.lite.aggregates.js
 			// https://github.com/webpack-contrib/imports-loader#disable-amd
