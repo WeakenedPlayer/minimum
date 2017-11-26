@@ -1,14 +1,14 @@
 {
   "name": "ns-screenshot-bot",
-  "version": "0.0.2-beta.1",
+  "version": "0.0.2-beta.2",
   "description": "",
   "main": "dist/main.bundle",
   "types": "dist/dist/index.d.ts",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
+    "nexe": "node nexe.build.js",
     "release": "npm run build && npm run nexe",
     "nexe-clean": "node_modules/.bin/nexe --clean",
-    "nexe": "node nexe.build.js",
     "test": "tsc && node dist/index.js"
   },
   "keywords": [],
@@ -22,19 +22,25 @@
     "opencollective": "^1.0.3",
     "preferences": "^0.2.1",
     "readdirp": "^2.1.0",
-    "rxjs": "^5.4.3"
+    "rxjs": "^5.4.3",
+    "sharp": "^0.18.4"
   },
   "author": "WeakenedPlayer",
   "license": "MIT",
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.17",
+    "file-loader": "^1.1.5",
+    "ignore-loader": "^0.1.2",
     "imports-loader": "^0.7.1",
     "nexe": "^2.0.0-rc.20",
     "node-addon-loader": "0.0.3",
+    "node-loader": "^0.6.0",
+    "rollup": "^0.51.8",
     "ts-loader": "^3.1.1",
     "typescript": "^2.6.1",
     "webpack": "^3.8.1",
     "webpack-merge": "^4.1.1",
-    "webpack-node-externals": "^1.6.0"
+    "webpack-node-externals": "^1.6.0",
+    "webpack-shell-plugin": "^0.5.0"
   }
 }

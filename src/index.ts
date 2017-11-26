@@ -1,3 +1,5 @@
+const SharpDlls = require( './sharp-dlls' );
+
 import { Observable } from 'rxjs';
 import { ViewHost, BotController, createPreference } from './@modules';
 import { SourceInputView, TemporaryInputView, TokenInputView, HomeView, ConnectedView, GuildSelectView, ChannelSelectView } from './views';

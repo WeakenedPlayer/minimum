@@ -2,6 +2,8 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const nodeAddonLoader = require('node-addon-loader');
+const fileLoader = require('file-loader');
+const WebpackShellPlugin = require( 'webpack-shell-plugin' );
 
 module.exports = {
 	entry: './src/index.ts',
@@ -25,8 +27,15 @@ module.exports = {
 			test: /\.node$/, 
 			loader: 'node-addon-loader',
 	        options: {
-	            basePath: path.join( path.resolve(__dirname), 'dist' ),
+				name: '[name].[ext]',
+				outputPath: path.join( path.resolve(__dirname), 'dist' )
 	        }
+		}, {
+			test: /\.dll$/,
+			loader: 'file-loader',
+			options: {
+				name: '[name].[ext]'
+			}
 		}, {
 			// ERROR in ./node_modules/rx-lite-aggregates/rx.lite.aggregates.js
 			// https://github.com/webpack-contrib/imports-loader#disable-amd
@@ -38,6 +47,13 @@ module.exports = {
 	plugins: [
 		// dist を消す
 		new CleanWebpackPlugin( [ 'dist' ] ),
+		new WebpackShellPlugin( { 
+        onBuildEnd: [
+       	 'echo "moving .node and .dll"',
+       	 'move dist\\*.node release',
+       	 'move dist\\*.dll release'
+   	 ]
+   } )
 	],
 	output: {
 		path: path.resolve(__dirname, 'dist'),
